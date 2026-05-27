@@ -35,3 +35,6 @@ app.use(mongoSanitize());
 
 // Data sanitization against XSS
 app.use(xss());
+
+
+module.exports = app;
