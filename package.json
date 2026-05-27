@@ -1,0 +1,20 @@
+{
+  "name": "for-check",
+  "version": "1.0.0",
+  "description": "This project just for review in my CV",
+  "homepage": "https://github.com/Mahdi-M-Back/For-Check#readme",
+  "bugs": {
+    "url": "https://github.com/Mahdi-M-Back/For-Check/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mahdi-M-Back/For-Check.git"
+  },
+  "license": "ISC",
+  "author": "Me & Coffee",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
