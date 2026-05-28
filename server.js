@@ -6,6 +6,7 @@ process.on('uncaughtException', (err) => {
   if (process.env.NODE_ENV === 'development') console.log(err);
   console.log(process.env.NODE_ENV);
   console.log(err.name, err.message);
+  ffffffffffff
   process.exit(1);
 });
 
