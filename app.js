@@ -5,10 +5,11 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const globalErrorHandler = require('./utilities/errorHandler')
 
 const app = express();
 
-// 1) GLOBAL MIDDLEWARES
+// GLOBAL MIDDLEWARES
 // Set security HTTP headers
 app.use(helmet());
 
@@ -36,5 +37,8 @@ app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xss());
 
+
+
+app.use(globalErrorHandler);
 
 module.exports = app;
