@@ -54,3 +54,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     data:updatedUser
   });
 });
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+  return sendResponse({
+    res,
+    statusCode: 204,
+    status: true,
+    message:"کاربر حذف شد",
+    enMessage:"User deleted successfully.",
+    data:null
+  });
+});
