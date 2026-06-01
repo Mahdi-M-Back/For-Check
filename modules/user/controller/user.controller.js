@@ -49,8 +49,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     res,
     statusCode: 200,
     status: true,
-    data: {
-      user: updatedUser
-    }
+    message:"کاربر یافت شد",
+    enMessage:"User found",
+    data:updatedUser
   });
 });
