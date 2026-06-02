@@ -37,3 +37,16 @@ const createSendToken = (user, statusCode, res) => {
     data:user
   });
 };
+
+exports.signup = catchAsync(async (req, res, next) => {
+  const newUser = await User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    role: req.body.role
+  });
+  // const url = `${req.protocol}://${req.get('host')}/me`;
+  // // console.log(url);
+  // new Email(newUser, url).sendWelcome();
+  createSendToken(newUser, 201, res);
+});
