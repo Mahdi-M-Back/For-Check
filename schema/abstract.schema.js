@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose') 
 
 function abstractSchema(options){
   const schema = new mongoose.Schema(
@@ -15,14 +15,12 @@ function abstractSchema(options){
     }
   )
 
-  schema.pre(/^find/ , function(next){
+  schema.pre(/^find/ , function(){
     this.where({isDeleted:false})
-    next()
   })
 
-  schema.pre(/^update/ , function(next){
+  schema.pre(/^update/ , function(){
     this.where({isDeleted:false})
-    next()
   })
 
   return schema;
