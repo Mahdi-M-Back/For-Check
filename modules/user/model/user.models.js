@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-import abstractSchema from '../../../schema/abstract.schema'
+const mongoosePaginate = require("mongoose-paginate-v2");
+const abstractSchema = require('./../../../schema/abstract.schema')
 
 const userSchema = new abstractSchema({
   name: {
@@ -23,7 +24,6 @@ const userSchema = new abstractSchema({
   password: {
     type: String,
     minlength: 6,
-    maxlength: 14,
     select: false,
   },
   passwordChangeAt: Date,
