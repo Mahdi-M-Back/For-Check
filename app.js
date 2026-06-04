@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const globalErrorHandler = require('./utilities/errorHandler')
+require('dotenv').config();
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
+app.use('/api/v1', require('./router'));
 
 app.use(globalErrorHandler);
 
