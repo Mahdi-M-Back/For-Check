@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+import abstractSchema from '../../../schema/abstract.schema'
 
-const userSchema = new mongoose.Schema({
+const userSchema = new abstractSchema({
   name: {
     type: String,
   },
@@ -16,12 +17,13 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'guide', 'admin', 'owner'],
+    enum: ['user', 'owner', 'admin'],
     default: 'user',
   },
   password: {
     type: String,
-    minlength: 8,
+    minlength: 6,
+    maxlength: 14,
     select: false,
   },
   passwordChangeAt: Date,
@@ -34,5 +36,5 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model('User', userSchema, 'Users');
-module.exports = User;
+userSchema.plugin(mongoosePaginate);
+module.exports = mongoose.model('User', userSchema, 'Users');
