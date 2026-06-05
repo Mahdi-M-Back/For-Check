@@ -28,15 +28,15 @@ exports.getMe = catchAsync(async (req, res) => {
   }
 
   return sendResponse({
-      res,
-      statusCode: 401,
-      success: true,
-      data:user,
-    });
+    res,
+    statusCode: 401,
+    success: true,
+    data: user,
+  });
 });
 
 exports.updateMe = catchAsync(async (req, res) => {
-  const user = req.user  
+  const user = req.user;
   const filteredBody = filterObj(req.body, 'name', 'userName');
 
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
@@ -65,13 +65,28 @@ exports.deleteMe = catchAsync(async (req, res) => {
 });
 
 exports.signup = catchAsync(async (req, res) => {
+  const user = await User.findOne({ email: req.body.email })
+  if (req.body.email === user.email) {
+    console.log('hi from if')
+    return sendResponse({
+      res,
+      statusCode: 401,
+      success: false,
+      enMessage: 'This email used by another user.',
+    });
+  }
+
   const salt = await bcrypt.genSaltSync(12);
   const hashPassword = await bcrypt.hashSync(req.body.password, salt);
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'userName',
+    'hashPassword',
+    'email',
+  );
   const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    userName: req.body.userName,
-    password: hashPassword,
+    filteredBody,
     role: 'user',
   });
   // const url = `${req.protocol}://${req.get('host')}/me`;
@@ -96,3 +111,5 @@ exports.login = catchAsync(async (req, res) => {
 
   createSendToken(user, 200, res);
 });
+
+// these API just for admin and owner
