@@ -36,5 +36,17 @@ const userSchema = new abstractSchema({
   },
 });
 
+userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+  if (this.passwordChangeAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangeAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+  // False means NOT changed
+  return false;
+};
+
 userSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('User', userSchema, 'Users');
