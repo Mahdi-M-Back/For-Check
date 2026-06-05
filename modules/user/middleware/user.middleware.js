@@ -2,6 +2,8 @@ const Validator = require('../../../utilities/Validator');
 const jwt = require('jsonwebtoken');
 const sendResponse = require('../../../utilities/Response');
 const catchAsync = require('../../../utilities/catchAsync');
+const { promisify } = require('util');
+const User = require('./../model/user.models');
 
 exports.protect = catchAsync(async(req, res, next) => {
   // 1) Getting token and check if it's there
@@ -24,16 +26,16 @@ exports.protect = catchAsync(async(req, res, next) => {
   // 2) Verification token
   let decoded;
   try {
-    decoded = await promisify(jwt.verify)(token, process.env.JWT_ACCESS_SECRET);
-  } catch (err) {
+    decoded = await promisify(jwt.verify)(token, process.env.JWT_ACCESS_SECRET);    
+  } catch (err) {    
     return sendResponse({
       res,
       statusCode: 401,
+      success: false,
       status: false,
       enMessage: 'Invalid or expired token. Please log in again.',
     });
   }
-
   // 3) Check if user still exists
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
@@ -44,9 +46,10 @@ exports.protect = catchAsync(async(req, res, next) => {
       enMessage: 'The user beloning to this token does no longer exist.',
     });
   }
-
   // 4) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
+    
+    
     return sendResponse({
       res,
       statusCode: 401,

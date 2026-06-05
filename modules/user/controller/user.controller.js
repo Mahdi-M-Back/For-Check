@@ -52,7 +52,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   return sendResponse({
     res,
     statusCode: 200,
-    status: true,
+    success: true,
     message: 'کاربر یافت شد',
     enMessage: 'User found',
     data: updatedUser,
@@ -60,11 +60,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+  await User.findByIdAndUpdate(req.user.id, { isDeleted: true });
   return sendResponse({
     res,
     statusCode: 204,
-    status: true,
+    success: true,
     message: 'کاربر حذف شد',
     enMessage: 'User deleted successfully.',
     data: null,
@@ -96,7 +96,7 @@ exports.login = catchAsync(async (req, res) => {
     return sendResponse({
       res,
       statusCode: 401,
-      status: false,
+      success: false,
       enMessage: 'Incorrect email or password',
     });
   }
