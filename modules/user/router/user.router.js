@@ -24,13 +24,13 @@ router.patch(
 );
 
 router.use(userMiddleware.restrictTo('admin', 'owner'));
+
 router.route('/').get(adminController.getAll);
 // .post(userController.createUser);
 
-// router
-//   .route('/:id')
-//   .get(userController.getOneUser)
-//   .patch(userController.updateUser)
-//   .delete(userController.deleteUser);
+router
+  .route('/:id')
+  // .get(userController.getOneUser)
+  .delete(adminController.delete);
 
 module.exports = router;
