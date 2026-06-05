@@ -40,7 +40,7 @@ exports.update = catchAsync(async (req, res) => {
   const updateUser = await User.findByIdAndUpdate(
     user.id,
     filterObj(req.body, 'name', 'userName', 'email', 'role'),
-    {new: true}
+    { new: true },
   );
 
   return sendResponse({
@@ -48,5 +48,24 @@ exports.update = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     data: updateUser,
+  });
+});
+
+exports.delete = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return sendResponse({
+      res,
+      statusCode: 401,
+      success: true,
+      enMessage: 'User not found.!',
+    });
+  }
+  await User.findByIdAndDelete(id)
+  return sendResponse({
+    res,
+    statusCode: 201,
+    success: true,
+    enMessage: 'User <HARD> deleted successfuly.',
   });
 });
