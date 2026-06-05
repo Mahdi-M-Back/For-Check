@@ -36,11 +36,10 @@ const userSchema = new abstractSchema({
   },
 });
 
-userSchema.pre('save', function(next) {
-  if (!this.isModified('password') || this.isNew) return next();
-
-  this.passwordChangeAt = Date.now() - 1000;
-  next();
+userSchema.pre('save', async function(done) {
+    if (!this.isModified('password') || this.isNew) return done();
+    this.passwordChangeAt = Date.now() - 1000;
+    done();
 });
 
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {

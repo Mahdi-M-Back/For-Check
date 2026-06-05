@@ -12,7 +12,7 @@ router.use(userMiddleware.protect);
 router
   .route('/me')
   .get(userController.getMe)
-  .patch(userController.updateMe)
+  .patch(userMiddleware.updateMe,userController.updateMe)
   .delete(userController.deleteMe);
 
 // router

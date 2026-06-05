@@ -5,7 +5,7 @@ const catchAsync = require('../../../utilities/catchAsync');
 const { promisify } = require('util');
 const User = require('./../model/user.models');
 
-exports.protect = catchAsync(async(req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
   let token;
   if (
@@ -26,8 +26,8 @@ exports.protect = catchAsync(async(req, res, next) => {
   // 2) Verification token
   let decoded;
   try {
-    decoded = await promisify(jwt.verify)(token, process.env.JWT_ACCESS_SECRET);    
-  } catch (err) {    
+    decoded = await promisify(jwt.verify)(token, process.env.JWT_ACCESS_SECRET);
+  } catch (err) {
     return sendResponse({
       res,
       statusCode: 401,
@@ -48,8 +48,6 @@ exports.protect = catchAsync(async(req, res, next) => {
   }
   // 4) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
-    
-    
     return sendResponse({
       res,
       statusCode: 401,
@@ -81,12 +79,134 @@ exports.signup = (req, res, next) => {
   const { name, userName, email, password } = req.body;
 
   // name
-  const nameCheck = Validator.isNotEmpty(name);
-  if (!nameCheck.success) {
-    return res
-      .status(400)
-      .json({ success: false, enMessage: nameCheck.enMessage, field: 'name' });
+  const nameDefinedCheck = Validator.isDefined(name);
+  if (!nameDefinedCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: nameDefinedCheck.enMessage,
+      data: 'name',
+    });
   }
+
+  const nameEmptyCheck = Validator.isNotEmpty(name);
+  if (!nameEmptyCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: nameEmptyCheck.enMessage,
+      data: 'name',
+    });
+  }
+
+  const nameStringCheck = Validator.isString(name);
+  if (!nameStringCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: nameStringCheck.enMessage,
+      data: 'name',
+    });
+  }
+
+  // email
+  const emailDefinedCheck = Validator.isDefined(email);
+  if (!emailDefinedCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: emailDefinedCheck.enMessage,
+      data: 'email',
+    });
+  }
+
+  const emailEmptyCheck = Validator.isNotEmpty(email);
+  if (!emailEmptyCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: emailEmptyCheck.enMessage,
+      data: 'email',
+    });
+  }
+
+  const emailCheck = Validator.isEmail(email);
+  if (!emailCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: emailCheck.enMessage,
+      data: 'email',
+    });
+  }
+
+  // userName
+  const userNameDefinedCheck = Validator.isDefined(userName);
+  if (!userNameDefinedCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: userNameDefinedCheck.enMessage,
+      data: 'userName',
+    });
+  }
+
+  const userNameEmptyCheck = Validator.isNotEmpty(userName);
+  if (!userNameEmptyCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: userNameEmptyCheck.enMessage,
+      data: 'userName',
+    });
+  }
+
+  const userNameCheck = Validator.isValidUsername(userName);
+  if (!userNameCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: userNameCheck.enMessage,
+      data: 'userName',
+    });
+  }
+
+  // password
+  const passwordDefinedCheck = Validator.isDefined(password);
+  if (!passwordDefinedCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: passwordDefinedCheck.enMessage,
+      data: 'password',
+    });
+  }
+
+  const passwordEmptyCheck = Validator.isNotEmpty(password);
+  if (!passwordEmptyCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: passwordEmptyCheck.enMessage,
+      data: 'password',
+    });
+  }
+
+  const passwordCheck = Validator.isValidPassword(password);
+  if (!passwordCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: passwordCheck.enMessage,
+      data: 'password',
+    });
+  }
+
+  next();
+};
+
+exports.login = (req, res, next) => {
+  const { email, password } = req.body;
 
   // email
   const emailCheck = Validator.isEmail(email);
@@ -95,16 +215,6 @@ exports.signup = (req, res, next) => {
       success: false,
       enMessage: emailCheck.enMessage,
       field: 'email',
-    });
-  }
-
-  // userName
-  const userNameCheck = Validator.isValidUsername(userName);
-  if (!userNameCheck.success) {
-    return res.status(400).json({
-      success: false,
-      enMessage: userNameCheck.enMessage,
-      field: 'userName',
     });
   }
 
@@ -121,31 +231,29 @@ exports.signup = (req, res, next) => {
   next();
 };
 
-exports.login = (req, res, next) => {
-  const { email, password } = req.body;
+exports.updateMe = (req, res, next) => {
+  const { name, userName } = req.body;
 
-  // email
-  const emailCheck = Validator.isEmail(email);
-  if (!emailCheck.success) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        enMessage: emailCheck.enMessage,
-        field: 'email',
-      });
+  // name
+  const nameStringCheck = Validator.isString(name);
+  if (!nameStringCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: nameStringCheck.enMessage,
+      data: 'name',
+    });
   }
 
-  // password
-  const passwordCheck = Validator.isValidPassword(password);
-  if (!passwordCheck.success) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        enMessage: passwordCheck.enMessage,
-        field: 'password',
-      });
+  // userName
+  const userNameCheck = Validator.isValidUsername(userName);
+  if (!userNameCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: userNameCheck.enMessage,
+      data: 'userName',
+    });
   }
 
   next();
