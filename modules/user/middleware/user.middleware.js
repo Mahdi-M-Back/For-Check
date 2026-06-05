@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const sendResponse = require('../../../utilities/Response');
 const catchAsync = require('../../../utilities/catchAsync');
 
-exports.protect = catchAsync(async (req, res, next) => {
+exports.protect = catchAsync(async(req, res, next) => {
   // 1) Getting token and check if it's there
   let token;
   if (
@@ -88,24 +88,48 @@ exports.signup = (req, res, next) => {
   // email
   const emailCheck = Validator.isEmail(email);
   if (!emailCheck.success) {
+    return res.status(400).json({
+      success: false,
+      enMessage: emailCheck.enMessage,
+      field: 'email',
+    });
+  }
+
+  // userName
+  const userNameCheck = Validator.isValidUsername(userName);
+  if (!userNameCheck.success) {
+    return res.status(400).json({
+      success: false,
+      enMessage: userNameCheck.enMessage,
+      field: 'userName',
+    });
+  }
+
+  // password
+  const passwordCheck = Validator.isValidPassword(password);
+  if (!passwordCheck.success) {
+    return res.status(400).json({
+      success: false,
+      enMessage: passwordCheck.enMessage,
+      field: 'password',
+    });
+  }
+
+  next();
+};
+
+exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  // email
+  const emailCheck = Validator.isEmail(email);
+  if (!emailCheck.success) {
     return res
       .status(400)
       .json({
         success: false,
         enMessage: emailCheck.enMessage,
         field: 'email',
-      });
-  }
-
-  // userName
-  const userNameCheck = Validator.isValidUsername(userName);
-  if (!userNameCheck.success) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        enMessage: userNameCheck.enMessage,
-        field: 'userName',
       });
   }
 
@@ -122,23 +146,4 @@ exports.signup = (req, res, next) => {
   }
 
   next();
-};
-
-
-exports.login = (req, res, next) => {
-    const { email, password } = req.body;
-
-    // email
-    const emailCheck = Validator.isEmail(email);
-    if (!emailCheck.success) {
-        return res.status(400).json({ success: false, enMessage: emailCheck.enMessage, field: 'email' });
-    }
-
-    // password
-    const passwordCheck = Validator.isValidPassword(password);
-    if (!passwordCheck.success) {
-        return res.status(400).json({ success: false, enMessage: passwordCheck.enMessage, field: 'password' });
-    }
-
-    next();
 };
