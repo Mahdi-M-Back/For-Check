@@ -15,6 +15,18 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+exports.getOne = catchAsync(async(req,res)=>{
+  const id = req.params.id
+  const user = await User.findById(id)
+
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    data: user,
+  });
+})
+
 exports.getAll = catchAsync(async (req, res) => {
   const allUser = await User.find();
   return sendResponse({
