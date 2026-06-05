@@ -1,11 +1,13 @@
 const express = require('express');
 const userController = require('../controller/user.controller');
+const adminController = require('../controller/admin.controller');
 const userMiddleware = require('../middleware/user.middleware');
 
 const router = express.Router();
 
 router.post('/signup', userMiddleware.signup, userController.signup);
 router.post('/login', userMiddleware.login, userController.login);
+
 
 router.use(userMiddleware.protect);
 
@@ -15,10 +17,14 @@ router
   .patch(userMiddleware.updateMe,userController.updateMe)
   .delete(userController.deleteMe);
 
-// router
-//   .route('/')
-//   .get(userController.getAllUser)
-//   .post(userController.createUser);
+router.patch('/:id', userMiddleware.restrictTo('owner'), adminController.update);
+
+router.use(userMiddleware.restrictTo('admin','owner'));
+router
+  .route('/')
+  .get(adminController.getAll)
+  // .post(userController.createUser);
+
 // router
 //   .route('/:id')
 //   .get(userController.getOneUser)

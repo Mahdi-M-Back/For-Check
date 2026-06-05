@@ -29,7 +29,7 @@ exports.getMe = catchAsync(async (req, res) => {
 
   return sendResponse({
     res,
-    statusCode: 401,
+    statusCode: 200,
     success: true,
     data: user,
   });
@@ -65,9 +65,8 @@ exports.deleteMe = catchAsync(async (req, res) => {
 });
 
 exports.signup = catchAsync(async (req, res) => {
-  const user = await User.findOne({ email: req.body.email })
+  const user = await User.findOne({ email: req.body.email });
   if (req.body.email === user.email) {
-    console.log('hi from if')
     return sendResponse({
       res,
       statusCode: 401,

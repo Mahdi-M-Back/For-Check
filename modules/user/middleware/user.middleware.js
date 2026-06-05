@@ -67,7 +67,7 @@ exports.restrictTo = (...roles) => {
       return sendResponse({
         res,
         statusCode: 403,
-        status: fale,
+        status: false,
         enMessage: 'You do not have permission to perform this action.',
       });
     }
