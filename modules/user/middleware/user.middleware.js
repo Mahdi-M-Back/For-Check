@@ -4,6 +4,7 @@ const sendResponse = require('../../../utilities/Response');
 const catchAsync = require('../../../utilities/catchAsync');
 const { promisify } = require('util');
 const User = require('./../model/user.models');
+const { nextTick } = require('process');
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
@@ -257,4 +258,30 @@ exports.updateMe = (req, res, next) => {
   }
 
   next();
+};
+
+exports.updateRoleAndEmail = (req, res, next) => {
+  const { role, email } = req.body;
+
+  // email
+  const emailStringCheck = Validator.isString(email);
+  if (!emailStringCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: emailStringCheck.enMessage,
+      data: 'email',
+    });
+  }
+
+  // role
+  const roleStringCheck = Validator.isString(role);
+  if (!roleStringCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: roleStringCheck.enMessage,
+      data: 'role',
+    });
+  }
 };

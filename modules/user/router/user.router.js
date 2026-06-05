@@ -8,22 +8,24 @@ const router = express.Router();
 router.post('/signup', userMiddleware.signup, userController.signup);
 router.post('/login', userMiddleware.login, userController.login);
 
-
 router.use(userMiddleware.protect);
 
 router
   .route('/me')
   .get(userController.getMe)
-  .patch(userMiddleware.updateMe,userController.updateMe)
+  .patch(userMiddleware.updateMe, userController.updateMe)
   .delete(userController.deleteMe);
 
-router.patch('/:id', userMiddleware.restrictTo('owner'), adminController.update);
+router.patch(
+  '/:id',
+  userMiddleware.restrictTo('owner'),
+  userMiddleware.updateRoleAndEmail,
+  adminController.update,
+);
 
-router.use(userMiddleware.restrictTo('admin','owner'));
-router
-  .route('/')
-  .get(adminController.getAll)
-  // .post(userController.createUser);
+router.use(userMiddleware.restrictTo('admin', 'owner'));
+router.route('/').get(adminController.getAll);
+// .post(userController.createUser);
 
 // router
 //   .route('/:id')
