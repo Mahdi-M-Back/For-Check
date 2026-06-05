@@ -6,11 +6,13 @@ function abstractSchema(options){
       ...options,
       isDeleted:{
         type:Boolean,
-        default:false
+        default:false,
+        select:false
       },
       deletedDate:{
         type:Date,
-        required:false
+        required:false,
+        select:false
       }
     }
   )
