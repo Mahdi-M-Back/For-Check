@@ -25,4 +25,28 @@ exports.getAll = catchAsync(async (req, res) => {
   });
 });
 
+exports.update = catchAsync(async (req, res) => {
+  const user = await User.findById(req.params.id);
 
+  if (!user) {
+    return sendResponse({
+      res,
+      statusCode: 401,
+      success: true,
+      enMessage: 'User not found.!',
+    });
+  }
+
+  const updateUser = await User.findByIdAndUpdate(
+    user.id,
+    filterObj(req.body, 'name', 'userName', 'email', 'role'),
+    {new: true}
+  );
+
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    data: updateUser,
+  });
+});
