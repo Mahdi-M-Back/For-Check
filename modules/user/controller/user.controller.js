@@ -36,19 +36,9 @@ exports.getMe = catchAsync(async (req, res) => {
 });
 
 exports.updateMe = catchAsync(async (req, res) => {
-  // 1) Create error if user POSTs password data
-  if (req.body.password || req.body.passwordConform) {
-    return sendResponse({
-      res,
-      statusCode: 401,
-      success: false,
-      enMessage: 'Incorrect email or password',
-    });
-  }
+  const user = req.user  
+  const filteredBody = filterObj(req.body, 'name', 'userName');
 
-  // 2) Filterd out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
-  // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true,
@@ -58,8 +48,6 @@ exports.updateMe = catchAsync(async (req, res) => {
     res,
     statusCode: 200,
     success: true,
-    message: 'کاربر یافت شد',
-    enMessage: 'User found',
     data: updatedUser,
   });
 });
