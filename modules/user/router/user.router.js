@@ -30,7 +30,7 @@ router.route('/').get(adminController.getAll);
 
 router
   .route('/:id')
-  // .get(userController.getOneUser)
+  .get(adminController.getOne)
   .delete(adminController.delete);
 
 module.exports = router;
