@@ -6,6 +6,12 @@ const { promisify } = require('util');
 const User = require('./../model/user.models');
 const { nextTick } = require('process');
 
+const ROLES = {
+    USER: 'user',
+    ADMIN: 'admin',
+    OWNER: 'owner'
+};
+
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
   let token;
@@ -72,8 +78,8 @@ exports.restrictTo = (...roles) => {
         enMessage: 'You do not have permission to perform this action.',
       });
     }
-    next();
   };
+  next();
 };
 
 exports.signup = (req, res, next) => {
@@ -275,7 +281,7 @@ exports.updateRoleAndEmail = (req, res, next) => {
   }
 
   // role
-  const roleStringCheck = Validator.isString(role);
+  const roleCheck = Validator.isInEnum(role,ROLES);
   if (!roleStringCheck.success) {
     return sendResponse({
       res,
@@ -284,4 +290,6 @@ exports.updateRoleAndEmail = (req, res, next) => {
       data: 'role',
     });
   }
+
+  next()
 };
