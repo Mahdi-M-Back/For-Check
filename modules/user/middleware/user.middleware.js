@@ -264,7 +264,7 @@ exports.updateRoleAndEmail = (req, res, next) => {
   const { role, email } = req.body;
 
   // email
-  const emailStringCheck = Validator.isString(email);
+  const emailStringCheck = Validator.isEmail(email);
   if (!emailStringCheck.success) {
     return sendResponse({
       res,
