@@ -7,16 +7,6 @@ const { createSendToken } = require('./../../../utilities/auth');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
-// These function not for user for another role like admin owner, ...
-exports.createUser = factory.createOne(User);
-exports.getAllUser = factory.getAll(User);
-exports.getOneUser = factory.getOne(User);
-exports.deleteUser = factory.deleteOne(User);
-//Don't update password with this
-exports.updateUser = factory.updateOne(User);
-
-// These function exactully for user
-
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -25,20 +15,35 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getMe = (req, res, next) => {
-  req.params.id = req.user.id;
-  next();
-};
+exports.getMe = catchAsync(async (req, res) => {
+  const user = User.findById(req.params.id);
 
-exports.updateMe = catchAsync(async (req, res, next) => {
+  if (!user) {
+    return sendResponse({
+      res,
+      statusCode: 401,
+      success: false,
+      enMessage: 'User not found.!',
+    });
+  }
+
+  return sendResponse({
+      res,
+      statusCode: 401,
+      success: true,
+      data:user,
+    });
+});
+
+exports.updateMe = catchAsync(async (req, res) => {
   // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConform) {
-    return next(
-      new AppError(
-        'This route is not for password update. Please use /updateMyPassword',
-        400,
-      ),
-    );
+    return sendResponse({
+      res,
+      statusCode: 401,
+      success: false,
+      enMessage: 'Incorrect email or password',
+    });
   }
 
   // 2) Filterd out unwanted fields names that are not allowed to be updated
@@ -59,7 +64,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteMe = catchAsync(async (req, res, next) => {
+exports.deleteMe = catchAsync(async (req, res) => {
   await User.findByIdAndUpdate(req.user.id, { isDeleted: true });
   return sendResponse({
     res,
