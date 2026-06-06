@@ -31,6 +31,7 @@ router.route('/').get(adminController.getAll);
 router
   .route('/:id')
   .get(adminController.getOne)
+  // HARD DELETE
   .delete(adminController.delete);
 
 module.exports = router;
