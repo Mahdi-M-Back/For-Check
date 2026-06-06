@@ -110,5 +110,3 @@ exports.login = catchAsync(async (req, res) => {
 
   createSendToken(user, 200, res);
 });
-
-// these API just for admin and owner

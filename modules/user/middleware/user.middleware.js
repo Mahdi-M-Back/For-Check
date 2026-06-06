@@ -65,7 +65,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
-   next();
+  next();
 });
 
 exports.restrictTo = (...roles) => {
@@ -210,7 +210,7 @@ exports.signup = (req, res, next) => {
     });
   }
 
-   next();
+  next();
 };
 
 exports.login = (req, res, next) => {
@@ -236,32 +236,36 @@ exports.login = (req, res, next) => {
     });
   }
 
-   next();
+  next();
 };
 
 exports.updateMe = (req, res, next) => {
   const { name, userName } = req.body;
 
   // name
-  const nameStringCheck = Validator.isString(name);
-  if (!nameStringCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: nameStringCheck.enMessage,
-      data: 'name',
-    });
+  if (name) {
+    const nameStringCheck = Validator.isString(name);
+    if (!nameStringCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: nameStringCheck.enMessage,
+        data: 'name',
+      });
+    }
   }
 
   // userName
-  const userNameCheck = Validator.isValidUsername(userName);
-  if (!userNameCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: userNameCheck.enMessage,
-      data: 'userName',
-    });
+  if (userName) {
+    const userNameCheck = Validator.isValidUsername(userName);
+    if (!userNameCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: userNameCheck.enMessage,
+        data: 'userName',
+      });
+    }
   }
 
   next();
