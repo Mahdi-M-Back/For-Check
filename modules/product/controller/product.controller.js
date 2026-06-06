@@ -43,11 +43,37 @@ exports.getAll = catchAsync(async (req, res) => {
 });
 
 exports.getOne = catchAsync(async (req, res) => {
-  const Prod = await Product.findById(req.params.id);
+  const pord = await Product.findById(req.params.id);
+  if(!pord){
+    return sendResponse({
+    res,
+    statusCode: 401,
+    success: false,
+    enMessage: 'product not found.!',
+  });
+  }
   return sendResponse({
     res,
     statusCode: 200,
     success: true,
-    data: Prod,
+    data: pord,
+  });
+});
+
+exports.delete = catchAsync(async (req, res) => {
+  const pord = await Product.findByIdAndUpdate(req.params.id , {isDeleted:true});
+  if(!pord){
+    return sendResponse({
+    res,
+    statusCode: 401,
+    success: false,
+    enMessage: 'product not found.!',
+  });
+  }
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    enMessage: 'deleted succeessfully',
   });
 });
