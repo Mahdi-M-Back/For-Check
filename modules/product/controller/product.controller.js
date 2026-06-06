@@ -31,6 +31,37 @@ exports.create = catchAsync(async (req, res) => {
   });
 });
 
+exports.update = catchAsync(async (req, res) => {
+  const filter = filterObj(
+    req.body,
+    'name',
+    'price',
+    'description',
+    'photo',
+    'rating',
+  );
+
+  const updateProd = await Product.findByIdAndUpdate(req.params.id, filter, {
+    new: true,
+  });
+
+  if (!updateProd) {
+    return sendResponse({
+      res,
+      statusCode: 401,
+      success: false,
+      enMessage: 'product not found.!',
+    });
+  }
+  return sendResponse({
+    res,
+    statusCode: 201,
+    success: true,
+    enMessage: 'Update product successfully',
+    data: updateProd,
+  });
+});
+
 exports.getAll = catchAsync(async (req, res) => {
   const allProd = await Product.find();
   return sendResponse({
@@ -44,13 +75,13 @@ exports.getAll = catchAsync(async (req, res) => {
 
 exports.getOne = catchAsync(async (req, res) => {
   const pord = await Product.findById(req.params.id);
-  if(!pord){
+  if (!pord) {
     return sendResponse({
-    res,
-    statusCode: 401,
-    success: false,
-    enMessage: 'product not found.!',
-  });
+      res,
+      statusCode: 401,
+      success: false,
+      enMessage: 'product not found.!',
+    });
   }
   return sendResponse({
     res,
@@ -61,14 +92,16 @@ exports.getOne = catchAsync(async (req, res) => {
 });
 
 exports.delete = catchAsync(async (req, res) => {
-  const pord = await Product.findByIdAndUpdate(req.params.id , {isDeleted:true});
-  if(!pord){
-    return sendResponse({
-    res,
-    statusCode: 401,
-    success: false,
-    enMessage: 'product not found.!',
+  const pord = await Product.findByIdAndUpdate(req.params.id, {
+    isDeleted: true,
   });
+  if (!pord) {
+    return sendResponse({
+      res,
+      statusCode: 401,
+      success: false,
+      enMessage: 'product not found.!',
+    });
   }
   return sendResponse({
     res,
