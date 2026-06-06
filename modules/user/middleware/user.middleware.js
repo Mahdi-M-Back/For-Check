@@ -69,7 +69,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.restrictTo = (...roles) => {
-  console.log('hi from restrict');
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return sendResponse({
