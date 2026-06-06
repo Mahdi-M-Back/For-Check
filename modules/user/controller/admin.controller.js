@@ -6,6 +6,8 @@ const catchAsync = require('./../../../utilities/catchAsync');
 const { createSendToken } = require('./../../../utilities/auth');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const APIFeatures = require('./../../../utilities/apiFeatures')
+
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -15,9 +17,9 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getOne = catchAsync(async(req,res)=>{
-  const id = req.params.id
-  const user = await User.findById(id)
+exports.getOne = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const user = await User.findById(id);
 
   return sendResponse({
     res,
@@ -25,10 +27,16 @@ exports.getOne = catchAsync(async(req,res)=>{
     success: true,
     data: user,
   });
-})
+});
 
 exports.getAll = catchAsync(async (req, res) => {
-  const allUser = await User.find();
+  const features = new APIFeatures(User.find(),req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate()
+
+  const allUser = await features.query;
   return sendResponse({
     res,
     statusCode: 200,
@@ -73,7 +81,7 @@ exports.delete = catchAsync(async (req, res) => {
       enMessage: 'User not found.!',
     });
   }
-  await User.findByIdAndDelete(id)
+  await User.findByIdAndDelete(id);
   return sendResponse({
     res,
     statusCode: 201,
