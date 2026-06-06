@@ -2,7 +2,6 @@ const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
 const Product = require('../model/product.model');
 
-
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -12,7 +11,7 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.create = catchAsync(async (req, res) => {
-  const filterObj = filterObj(
+  const filter = filterObj(
     req.body,
     'name',
     'price',
@@ -21,7 +20,7 @@ exports.create = catchAsync(async (req, res) => {
     'rating',
   );
 
-  const newProd = await Product.create(filterObj);
+  const newProd = await Product.create(filter);
 
   return sendResponse({
     res,
@@ -29,5 +28,16 @@ exports.create = catchAsync(async (req, res) => {
     success: true,
     enMessage: 'Create product successfully',
     data: newProd,
+  });
+});
+
+exports.getAll = catchAsync(async (req, res) => {
+  const allProd = await Product.find();
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    enMessage: `All porduct balance is : ${allProd.length}`,
+    data: allProd,
   });
 });
