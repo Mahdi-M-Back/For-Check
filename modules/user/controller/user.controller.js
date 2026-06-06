@@ -66,7 +66,7 @@ exports.deleteMe = catchAsync(async (req, res) => {
 
 exports.signup = catchAsync(async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
-  if (req.body.email === user.email) {
+  if (user) {
     return sendResponse({
       res,
       statusCode: 401,
@@ -85,7 +85,7 @@ exports.signup = catchAsync(async (req, res) => {
     'email',
   );
   const newUser = await User.create({
-    filteredBody,
+    ...filteredBody,
     role: 'user',
   });
   // const url = `${req.protocol}://${req.get('host')}/me`;

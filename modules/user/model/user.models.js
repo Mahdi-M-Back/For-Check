@@ -36,10 +36,9 @@ const userSchema = new abstractSchema({
   },
 });
 
-userSchema.pre('save', async function(done) {
-    if (!this.isModified('password') || this.isNew) return done();
-    this.passwordChangeAt = Date.now() - 1000;
-    done();
+userSchema.pre('save', async function() {
+    if (!this.isModified('password')) return;
+    this.password = await bcrypt.hash(this.password, 12);
 });
 
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
