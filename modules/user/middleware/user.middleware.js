@@ -7,9 +7,9 @@ const User = require('./../model/user.models');
 const { nextTick } = require('process');
 
 const ROLES = {
-    USER: 'user',
-    ADMIN: 'admin',
-    OWNER: 'owner'
+  USER: 'user',
+  ADMIN: 'admin',
+  OWNER: 'owner',
 };
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -65,10 +65,11 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
-  next();
+   next();
 });
 
 exports.restrictTo = (...roles) => {
+  console.log('hi from restrict');
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return sendResponse({
@@ -78,8 +79,8 @@ exports.restrictTo = (...roles) => {
         enMessage: 'You do not have permission to perform this action.',
       });
     }
+    next();
   };
-  next();
 };
 
 exports.signup = (req, res, next) => {
@@ -209,7 +210,7 @@ exports.signup = (req, res, next) => {
     });
   }
 
-  next();
+   next();
 };
 
 exports.login = (req, res, next) => {
@@ -235,7 +236,7 @@ exports.login = (req, res, next) => {
     });
   }
 
-  next();
+   next();
 };
 
 exports.updateMe = (req, res, next) => {
@@ -270,26 +271,30 @@ exports.updateRoleAndEmail = (req, res, next) => {
   const { role, email } = req.body;
 
   // email
-  const emailStringCheck = Validator.isEmail(email);
-  if (!emailStringCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: emailStringCheck.enMessage,
-      data: 'email',
-    });
+  if (email) {
+    const emailCheck = Validator.isEmail(email);
+    if (!emailCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: emailCheck.enMessage,
+        data: 'email',
+      });
+    }
   }
 
   // role
-  const roleCheck = Validator.isInEnum(role,ROLES);
-  if (!roleStringCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: roleStringCheck.enMessage,
-      data: 'role',
-    });
+  if (role) {
+    const roleCheck = Validator.isInEnum(role, ROLES);
+    if (!roleCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: roleCheck.enMessage,
+        data: 'role',
+      });
+    }
   }
 
-  next()
+  next();
 };
