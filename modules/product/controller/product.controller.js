@@ -41,3 +41,13 @@ exports.getAll = catchAsync(async (req, res) => {
     data: allProd,
   });
 });
+
+exports.getOne = catchAsync(async (req, res) => {
+  const Prod = await Product.findById(req.params.id);
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    data: Prod,
+  });
+});
