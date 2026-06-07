@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const mongoosePaginate = require("mongoose-paginate-v2");
 const abstractSchema = require('./../../../schema/abstract.schema')
 
 const userSchema = new abstractSchema({
@@ -53,5 +52,4 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   return false;
 };
 
-userSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('User', userSchema, 'Users');
