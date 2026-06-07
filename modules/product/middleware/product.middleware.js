@@ -143,3 +143,73 @@ exports.create = (req, res, next) => {
 
   next();
 };
+
+exports.update = (req,res,next)=>{
+
+  const { name, description, price, photo, rating } = req.body;
+
+  // photo
+  if (photo) {
+    const photoStringCheck = Validator.isString(photo);
+    if (!photoStringCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: photoStringCheck.enMessage,
+        data: 'photo',
+      });
+    }
+  }
+
+  // name
+  if (name) {
+    const nameStringCheck = Validator.isString(name);
+    if (!nameStringCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: nameStringCheck.enMessage,
+        data: 'name',
+      });
+    }
+  }
+
+  // description
+  if (description) {
+    const descriptionStringCheck = Validator.isString(description);
+    if (!descriptionStringCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: descriptionStringCheck.enMessage,
+        data: 'description',
+      });
+    }
+  }
+
+  // price
+  if (price) {
+    const priceNumberCheck = Validator.isNumber(price);
+    if (!priceNumberCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: priceNumberCheck.enMessage,
+        data: 'price',
+      });
+    }
+  }
+
+  // rating
+  if (rating) {
+    const ratingNumberCheck = Validator.isNumber(rating);
+    if (!ratingNumberCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: ratingNumberCheck.enMessage,
+        data: 'rating',
+      });
+    }
+  }
+}
