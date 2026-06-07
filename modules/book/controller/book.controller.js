@@ -10,18 +10,21 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.create = catchAsync(async(req,res,next)=>{
-  const filterField = filterObj(req.body, 'product','price')
-  const newBook=await bookModel.create({ ...filterField ,user:req.user._id})
+exports.create = catchAsync(async (req, res, next) => {
+  const filterField = filterObj(req.body, 'product', 'price');
+  const newBook = await bookModel.create({
+    ...filterField,
+    user: req.user._id,
+  });
 
   return sendResponse({
     res,
-    statusCode:200,
-    success:true,
-    enMessage:"All books there are",
-    data:newBook
-  })
-})
+    statusCode: 200,
+    success: true,
+    enMessage: 'All books there are',
+    data: newBook,
+  });
+});
 
 exports.getAll = catchAsync(async (req, res, next) => {
   const allBook = await bookModel.find();
@@ -32,5 +35,24 @@ exports.getAll = catchAsync(async (req, res, next) => {
     success: true,
     enMessage: `All books there are, the count is : ${allBook.length} `,
     data: allBook,
+  });
+});
+
+exports.getOne = catchAsync(async (req, res, next) => {
+  const book = await bookModel.findById(req.params.id);
+  if (!book) {
+    return sendResponse({
+      res,
+      statusCode: 404 ,
+      success: false,
+      enMessage: 'book not found.'
+    });
+  }
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    enMessage: 'book found.',
+    data: book,
   });
 });
