@@ -10,6 +10,19 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
+exports.create = catchAsync(async(req,res,next)=>{
+  const filterField = filterObj(req.body, 'product','price')
+  const newBook=await bookModel.create({ ...filterField ,user:req.user._id})
+
+  return sendResponse({
+    res,
+    statusCode:200,
+    success:true,
+    enMessage:"All books there are",
+    data:newBook
+  })
+})
+
 exports.getAll = catchAsync(async (req, res, next) => {
   const allBook = await bookModel.find();
 
