@@ -8,6 +8,7 @@ require('dotenv').config();
 
 const app = express();
 
+app.set('query parser', 'extended')
 // GLOBAL MIDDLEWARES
 // Set security HTTP headers
 app.use(helmet());

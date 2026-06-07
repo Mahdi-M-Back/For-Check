@@ -1,6 +1,7 @@
 const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
 const Product = require('../model/product.model');
+const APIFeatures = require('./../../../utilities/apiFeatures');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -63,12 +64,19 @@ exports.update = catchAsync(async (req, res) => {
 });
 
 exports.getAll = catchAsync(async (req, res) => {
-  const allProd = await Product.find();
+  const feature = new APIFeatures(Product.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const allProd = await feature.query;
+
   return sendResponse({
     res,
     statusCode: 200,
     success: true,
-    enMessage: `All porduct balance is : ${allProd.length}`,
+    enMessage: `All porduct balance is : ${allProd.length} `,
     data: allProd,
   });
 });
