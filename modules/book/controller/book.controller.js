@@ -30,7 +30,7 @@ exports.getAll = catchAsync(async (req, res, next) => {
     res,
     statusCode: 200,
     success: true,
-    enMessage: 'All books there are',
+    enMessage: `All books there are, the count is : ${allBook.length} `,
     data: allBook,
   });
 });
