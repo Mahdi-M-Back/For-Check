@@ -12,7 +12,7 @@ router.get('/:id',bookController.getOne);
 
 router.use(restrictTo('admin','owner'));
 
-router.route('/:id').patch(bookController.update).delete(bookController.delete);
+router.route('/:id').patch(bookMiddleware.update,bookController.update).delete(bookController.delete);
 router.get('/',bookController.getAll);
 
 module.exports = router;
