@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
   mongoose
     .connect(DB)
     .then(() => {
-      console.log('DATABASE Connected successfuly...🚀');
+      console.log('DATABASE Connected successfully...🚀');
     })
     .catch((err) => {
       console.log(err);
@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'production') {
   const DB = process.env.DATABASE_LOCAL;
 
   mongoose.connect(DB).then(() => {
-    console.log('DATABASE Connected successfuly...🚀');
+    console.log('DATABASE Connected successfully...🚀');
   });
 }
 

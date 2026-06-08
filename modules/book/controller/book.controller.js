@@ -27,7 +27,10 @@ exports.create = catchAsync(async (req, res) => {
 });
 
 exports.getAll = catchAsync(async (req, res) => {
-  const allBook = await bookModel.find();
+  const allBook = await bookModel.find().populate([
+    { path: 'user', select: 'name' },
+    { path: 'product', select: 'name' },
+  ]);
 
   return sendResponse({
     res,
@@ -39,7 +42,7 @@ exports.getAll = catchAsync(async (req, res) => {
 });
 
 exports.getOne = catchAsync(async (req, res) => {
-  const book = await bookModel.findById(req.params.id);
+  const book = await bookModel.findById(req.params.id)
   if (!book) {
     return sendResponse({
       res,
@@ -82,7 +85,9 @@ exports.update = catchAsync(async (req, res) => {
 });
 
 exports.delete = catchAsync(async (req, res) => {
-  const book = await bookModel.findByIdAndUpdate(req.params.id,{isDeleted:true});
+  const book = await bookModel.findByIdAndUpdate(req.params.id, {
+    isDeleted: true,
+  });
   if (!book) {
     return sendResponse({
       res,

@@ -5,20 +5,20 @@ const bookSchema = new abstractSchema({
   product: {
     type: mongoose.Schema.ObjectId,
     ref: 'Product',
-    require: true,
+    required: true,
   },
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    require: true,
+    required: true,
   },
   price: {
     type: Number,
-    require: true,
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
   paid: {
     type: Boolean,
