@@ -57,7 +57,7 @@ exports.getOne = catchAsync(async (req, res) => {
   });
 });
 
-exports.update = catchAsync(async (req, res, next) => {
+exports.update = catchAsync(async (req, res) => {
   const filterField = filterObj(req.body, 'product', 'price');
   const updateBook = await bookModel.findByIdAndUpdate(
     req.params.id,
@@ -78,5 +78,20 @@ exports.update = catchAsync(async (req, res, next) => {
     success: true,
     enMessage: 'book updated successfully.',
     data: updateBook,
+  });
+});
+
+exports.delete = catchAsync(async (req, res) => {
+  const book = await bookModel.findByIdAndDelete(req.params.id);
+  if (!book) {
+    return sendResponse({
+      res,
+      statusCode: 404,
+      enMessage: 'book not found.',
+    });
+  }
+  return sendResponse({
+    res,
+    statusCode: 204,
   });
 });
