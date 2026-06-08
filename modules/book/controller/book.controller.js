@@ -1,5 +1,6 @@
 const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
+const APIFeatures = require('../../../utilities/apiFeatures');
 const bookModel = require('../model/book.model');
 
 const filterObj = (obj, ...allowedFields) => {
@@ -27,10 +28,19 @@ exports.create = catchAsync(async (req, res) => {
 });
 
 exports.getAll = catchAsync(async (req, res) => {
-  const allBook = await bookModel.find().populate([
-    { path: 'user', select: 'name' },
-    { path: 'product', select: 'name' },
-  ]);
+  const feature = new APIFeatures(
+    bookModel.find().populate([
+      { path: 'user', select: 'name' },
+      { path: 'product', select: 'name' },
+    ]),
+    req.query,
+  )
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const allBook = await feature.query;
 
   return sendResponse({
     res,
