@@ -42,7 +42,10 @@ exports.getAll = catchAsync(async (req, res) => {
 });
 
 exports.getOne = catchAsync(async (req, res) => {
-  const book = await bookModel.findById(req.params.id)
+  const book = await bookModel.findById(req.params.id).populate([
+    { path: 'user', select: 'name' },
+    { path: 'product', select: 'name' },
+  ]);
   if (!book) {
     return sendResponse({
       res,
