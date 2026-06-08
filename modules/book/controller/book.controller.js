@@ -10,7 +10,7 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.create = catchAsync(async (req, res, next) => {
+exports.create = catchAsync(async (req, res) => {
   const filterField = filterObj(req.body, 'product', 'price');
   const newBook = await bookModel.create({
     ...filterField,
@@ -26,7 +26,7 @@ exports.create = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAll = catchAsync(async (req, res, next) => {
+exports.getAll = catchAsync(async (req, res) => {
   const allBook = await bookModel.find();
 
   return sendResponse({
@@ -38,14 +38,14 @@ exports.getAll = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getOne = catchAsync(async (req, res, next) => {
+exports.getOne = catchAsync(async (req, res) => {
   const book = await bookModel.findById(req.params.id);
   if (!book) {
     return sendResponse({
       res,
-      statusCode: 404 ,
+      statusCode: 404,
       success: false,
-      enMessage: 'book not found.'
+      enMessage: 'book not found.',
     });
   }
   return sendResponse({
@@ -54,5 +54,29 @@ exports.getOne = catchAsync(async (req, res, next) => {
     success: true,
     enMessage: 'book found.',
     data: book,
+  });
+});
+
+exports.update = catchAsync(async (req, res, next) => {
+  const filterField = filterObj(req.body, 'product', 'price');
+  const updateBook = await bookModel.findByIdAndUpdate(
+    req.params.id,
+    filterField,
+    { new: true },
+  );
+  if (!updateBook) {
+    return sendResponse({
+      res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'book not found.',
+    });
+  }
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    enMessage: 'book updated successfully.',
+    data: updateBook,
   });
 });
