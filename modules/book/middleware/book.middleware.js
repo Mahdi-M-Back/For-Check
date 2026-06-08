@@ -58,3 +58,29 @@ exports.create = (req, res, next) => {
 
   next();
 };
+
+exports.update= (req,res,next)=>{
+  const { product, price } = req.body;
+
+  // price 
+  if(price){
+    const priceIsNumber = Validator.isNumber(price);
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: priceNumberCheck.enMessage,
+      data: 'price',
+    });
+  }
+
+  // product 
+  if(product){
+    const productIdCheck = Validator.isMongoId(product);
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: productIdCheck.enMessage,
+      data: 'product',
+    });
+  }
+}
