@@ -82,7 +82,7 @@ exports.update = catchAsync(async (req, res) => {
 });
 
 exports.delete = catchAsync(async (req, res) => {
-  const book = await bookModel.findByIdAndDelete(req.params.id);
+  const book = await bookModel.findByIdAndUpdate(req.params.id,{isDeleted:true});
   if (!book) {
     return sendResponse({
       res,
