@@ -110,3 +110,49 @@ exports.login = catchAsync(async (req, res) => {
 
   createSendToken(user, 200, res);
 });
+
+exports.forgotPassword = catchAsync(async (req, res) => {
+  const user = await User.findOne({ email: email.req.body });
+  if (!user) {
+    return sendResponse({
+      res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'There is no user with email address.',
+    });
+  }
+
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  user.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  user.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minute
+
+  const enMessage = `Forgot your password? Submit a PATCH request 
+  with new password and passwordConfirm to:${resetURL}.
+  \nIf you didn't forgot your password, please ignore this email!`;
+  await user.save({validateBeforeSave: false})
+
+  try{
+    const resetURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/resetPassword/${resetToken}`;
+    return sendResponse({
+      res,
+      statusCode:200,
+      enMessage:'Token sent to email.!',
+      success:true
+    })
+  }catch(err){
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    return sendResponse({
+      res, 
+      statusCode:401,
+      success:false,
+      enMessage:'There was an error sending the email. Try again later!'
+    })
+  }
+});
