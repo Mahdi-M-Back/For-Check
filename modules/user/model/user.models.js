@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const abstractSchema = require('./../../../schema/abstract.schema')
+const abstractSchema = require('./../../../schema/abstract.schema');
 
 const userSchema = new abstractSchema({
   name: {
@@ -35,16 +35,11 @@ const userSchema = new abstractSchema({
   },
 });
 
-userSchema.pre('save', async function() {
-    if (!this.isModified('password')) return;
-    this.password = await bcrypt.hash(this.password, 12);
-});
-
-userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangeAt) {
     const changedTimestamp = parseInt(
       this.passwordChangeAt.getTime() / 1000,
-      10
+      10,
     );
     return JWTTimestamp < changedTimestamp;
   }
