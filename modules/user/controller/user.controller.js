@@ -194,3 +194,16 @@ exports.resetPassword = catchAsync(async (req, res) => {
   createSendToken(user, 200, res);
 });
 
+exports.updatePassword = catchAsync(async(req,res)=>{
+  const {password} =req.body
+  const user = await User.findById(req.user.id)
+  const salt = await bcrypt.genSaltSync(12);
+  const hashPassword = await bcrypt.hashSync(password, salt);
+  user.password = hashPassword
+  return sendResponse({
+    res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'Password reset seccessfully.',
+  })
+})
