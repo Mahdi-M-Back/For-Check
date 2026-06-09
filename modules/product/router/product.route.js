@@ -7,7 +7,7 @@ const {
 const productController = require('./../controller/product.controller');
 const productMiddleware = require('./../middleware/product.middleware');
 
-router.get('/'.productController.getAll);
+router.get('/', productController.getAll);
 router.get('/:id', productController.getOne);
 
 router.use(protect);
