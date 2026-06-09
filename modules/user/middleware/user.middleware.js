@@ -301,3 +301,27 @@ exports.updateRoleAndEmail = (req, res, next) => {
 
   next();
 };
+
+exports.forgotPassword = (req, res, next) => {
+  const { email } = req.body;
+  // email
+  const emailDefinedCheck = Validator.isDefined(email);
+  if (!emailDefinedCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: emailDefinedCheck.enMessage,
+      data: 'email',
+    });
+  }
+
+  const emailCheck = Validator.isEmail(email);
+  if (!emailCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: emailCheck.enMessage,
+      data: 'email',
+    });
+  }
+};
