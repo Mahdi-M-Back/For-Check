@@ -304,6 +304,7 @@ exports.updateRoleAndEmail = (req, res, next) => {
 
 exports.forgotPassword = (req, res, next) => {
   const { email } = req.body;
+
   // email
   const emailDefinedCheck = Validator.isDefined(email);
   if (!emailDefinedCheck.success) {
@@ -324,4 +325,43 @@ exports.forgotPassword = (req, res, next) => {
       data: 'email',
     });
   }
+
+  next();
+};
+
+exports.resetPassword = (req, res, next) => {
+  const { password } = req.body;
+
+  // password
+  const passwordDefinedCheck = Validator.isDefined(password);
+  if (!passwordDefinedCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: passwordDefinedCheck.enMessage,
+      data: 'password',
+    });
+  }
+
+  const passwordEmptyCheck = Validator.isNotEmpty(password);
+  if (!passwordEmptyCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: passwordEmptyCheck.enMessage,
+      data: 'password',
+    });
+  }
+
+  const passwordCheck = Validator.isValidPassword(password);
+  if (!passwordCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: passwordCheck.enMessage,
+      data: 'password',
+    });
+  }
+
+  next();
 };
