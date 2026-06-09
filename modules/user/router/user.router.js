@@ -12,7 +12,7 @@ router.patch('/resetPassword/:token',userMiddleware.resetPassword,userController
 
 router.use(userMiddleware.protect);
 
-router.patch('/updatePassword',userController.updatePassword)
+router.patch('/updatePassword',userMiddleware.resetPassword,userController.updatePassword)
 router
   .route('/me')
   .get(userController.getMe)
