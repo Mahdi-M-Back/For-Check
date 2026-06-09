@@ -127,32 +127,57 @@ exports.forgotPassword = catchAsync(async (req, res) => {
     .createHash('sha256')
     .update(resetToken)
     .digest('hex');
-  user.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minute
+  user.passwordResetExpires = Date.now() + 15 * 60 * 1000; // 15 minute
 
   const enMessage = `Forgot your password? Submit a PATCH request 
   with new password and passwordConfirm to:${resetURL}.
   \nIf you didn't forgot your password, please ignore this email!`;
-  await user.save({validateBeforeSave: false})
+  await user.save({ validateBeforeSave: false });
 
-  try{
+  try {
     const resetURL = `${req.protocol}://${req.get(
-      'host'
+      'host',
     )}/api/v1/users/resetPassword/${resetToken}`;
     return sendResponse({
       res,
-      statusCode:200,
-      enMessage:'Token sent to email.!',
-      success:true
-    })
-  }catch(err){
+      statusCode: 200,
+      enMessage: 'Token sent to email.!',
+      success: true,
+    });
+  } catch (err) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
     return sendResponse({
-      res, 
-      statusCode:401,
-      success:false,
-      enMessage:'There was an error sending the email. Try again later!'
-    })
+      res,
+      statusCode: 401,
+      success: false,
+      enMessage: 'There was an error sending the email. Try again later!',
+    });
   }
 });
+
+exports.resetPassword = catchAsync(async (req, res) => {
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const testUser = await User.findOne({ passwordResetToken: hashedToken });
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  user.passwordChangeAt = Date.now();
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  await user.save();
+
+  createSendToken(user, 200, res);
+});
+
