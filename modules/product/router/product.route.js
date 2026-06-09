@@ -1,10 +1,22 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
+const {
+  protect,
+  restrictTo,
+} = require('./../../user/middleware/user.middleware');
+const productController = require('./../controller/product.controller');
+const productMiddleware = require('./../middleware/product.middleware');
 
-const productController = require('./../controller/product.controller')
-const productMiddleware = require('./../middleware/product.middleware')
+router.get('/'.productController.getAll);
+router.get('/:id', productController.getOne);
 
-router.route('/').post(productMiddleware.create,productController.create).get(productController.getAll)
-router.route('/:id').get(productController.getOne).patch(productMiddleware.update,productController.update).delete(productController.delete)
+router.use(protect);
+router.use(restrictTo('admin', 'owner'));
 
-module.exports = router
+router.post('/', productMiddleware.create, productController.create);
+router
+  .route('/:id')
+  .patch(productMiddleware.update, productController.update)
+  .delete(productController.delete);
+
+module.exports = router;
