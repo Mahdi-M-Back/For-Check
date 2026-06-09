@@ -2,6 +2,7 @@ const User = require('./../model/user.models');
 const factory = require('../../../utilities/handlerfactory');
 const AppError = require('../../../utilities/appError');
 const sendResponse = require('./../../../utilities/Response');
+const Email = require('./../../../utilities/email');
 const catchAsync = require('./../../../utilities/catchAsync');
 const { createSendToken } = require('./../../../utilities/auth');
 const bcrypt = require('bcryptjs');
@@ -84,13 +85,11 @@ exports.signup = catchAsync(async (req, res) => {
     'hashPassword',
     'email',
   );
-  const newUser = await User.create({
+  const newUser = await User.save({
     ...filteredBody,
     role: 'user',
   });
-  // const url = `${req.protocol}://${req.get('host')}/me`;
-  // // console.log(url);
-  // new Email(newUser, url).sendWelcome();
+  await new Email(newUser, url).send('welcome', 'Welcome to My Test Project..!');
   createSendToken(newUser, 201, res);
 });
 
@@ -112,13 +111,14 @@ exports.login = catchAsync(async (req, res) => {
 });
 
 exports.forgotPassword = catchAsync(async (req, res) => {
-  const user = await User.findOne({ email: email.req.body });
+  const { email } = req.body;
+  const user = await User.findOne({ email });
   if (!user) {
     return sendResponse({
       res,
       statusCode: 404,
       success: false,
-      enMessage: 'There is no user with email address.',
+      enMessage: 'If this email exists, a reset link was sent.',
     });
   }
 
@@ -129,15 +129,18 @@ exports.forgotPassword = catchAsync(async (req, res) => {
     .digest('hex');
   user.passwordResetExpires = Date.now() + 15 * 60 * 1000; // 15 minute
 
-  const enMessage = `Forgot your password? Submit a PATCH request 
-  with new password and passwordConfirm to:${resetURL}.
-  \nIf you didn't forgot your password, please ignore this email!`;
-  await user.save({ validateBeforeSave: false });
-
   try {
     const resetURL = `${req.protocol}://${req.get(
       'host',
     )}/api/v1/users/resetPassword/${resetToken}`;
+    console.log(resetURL)
+    const enMessage = `Forgot your password? Submit a PATCH request 
+      with new password and passwordConfirm to:${resetURL}.
+      \nIf you didn't forgot your password, please ignore this email!`;
+
+    await new Email(user, resetURL).send('Password Reset', enMessage);
+
+    await user.save({ validateBeforeSave: false });
     return sendResponse({
       res,
       statusCode: 200,
@@ -158,20 +161,30 @@ exports.forgotPassword = catchAsync(async (req, res) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res) => {
+  const {password}=req.body
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
-
-  const testUser = await User.findOne({ passwordResetToken: hashedToken });
 
   const user = await User.findOne({
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
   });
 
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+
+  if(!user){
+    return sendResponse({
+      res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'Somethings went very wrong.!',
+    });
+  }
+
+  const salt = await bcrypt.genSaltSync(12);
+  const hashPassword = await bcrypt.hashSync(password, salt);
+  user.password = hashPassword
   user.passwordChangeAt = Date.now();
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
