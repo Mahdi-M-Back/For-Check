@@ -1,0 +1,136 @@
+[33mbb2e3d0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m add route resetPassword for update password.
+[33m890511b[m add route resetPassword
+[33m222e64e[m add middleaware resetPassword
+[33m4f190fb[m add route  forgotPassword
+[33m676fa15[m add middleaware forgotPassword
+[33mafd6bc5[m add change password when until user is loged in
+[33m95b4955[m add this file for send email esaier
+[33m3dadfff[m add reset password url.
+[33me6c6e8a[m remove this middleware and add manually to controller.
+[33m31551ee[m fix bug.
+[33mbe62d8e[m fix bug
+[33m354e06a[m add restpassword
+[33m6c62d28[m add route forgot pass.
+[33m608d992[m add fotgot password
+[33m8c57b7c[m add package
+[33m432ada4[m add permission.
+[33m8d6166d[m add update middleware.
+[33m0f34917[m add create middleware.
+[33m138dfbd[m add update middleware.
+[33mfe7ab49[m add create middleware.
+[33m250dcc7[m add permission to book route.
+[33m4b57888[m add advance searching query
+[33m61ca377[m add popluation to get one
+[33m2158352[m add population
+[33mcc7f308[m add  delete rote
+[33ma03a66d[m .
+[33m21a9164[m add delete
+[33m32886c3[m add route update
+[33m96f5435[m add update book
+[33md828044[m cmplate readme file
+[33m59d9158[m add getone route.
+[33m8064927[m add getone book
+[33mbb5b425[m add get all route.
+[33m456eddf[m .
+[33mf97b2de[m add create book
+[33m647ee85[m add bookroute
+[33m9db1fb2[m add create book
+[33me8a367c[m add filter object for req.body
+[33m2bc81b4[m add getAll in controller book
+[33m32ba2b5[m .
+[33m5b97a6d[m add booking model file and its model.
+[33m251ca6f[m add advance query to getall product.
+[33mc8a906d[m .
+[33m21f359c[m add middleware to route.
+[33me274ec3[m add middlware to update.
+[33m3c1594a[m add middleware to route.
+[33m7d21bd3[m .
+[33mb3596f2[m .
+[33m4d137ec[m add product route
+[33m940b458[m add update product
+[33mb5d433e[m add delete route
+[33md493219[m add delete
+[33m50daa57[m add get all route
+[33m16e61ac[m add get one product
+[33m561d139[m add get all product.
+[33m665f03c[m add route product file and create route.
+[33m5ec0c97[m add product
+[33m13f17aa[m add product controller and add create product.
+[33m5d47a76[m add model product and create schema
+[33mf30d04d[m .
+[33m05906c5[m .
+[33mf047c77[m add advanca query like pagination search by field sort , ....
+[33ma6de959[m .
+[33med1472b[m .
+[33m2f405e4[m add enum in middleware
+[33m47d3953[m add get one user controller
+[33mbc0a6c2[m add get one user router
+[33md799880[m add router
+[33m3fbce57[m add hardDelete
+[33ma3b5029[m .
+[33m9cafe68[m add middleware for update role and email
+[33m2e481da[m add update user by admin
+[33mf86ca45[m add router
+[33me3d371f[m Add admin controller and get all user
+[33m0ac814d[m .
+[33m26d5eaa[m add updatemiddleware.
+[33m9e8ac0c[m select false isDeleted
+[33m4267433[m Add update me
+[33md5f1ef3[m add endpoint get me
+[33me14b344[m add util
+[33m51b0dae[m add delete me route
+[33m53d98ea[m set middleware for passwordchangeAt
+[33m5026836[m add middleware for check time change password for jwt
+[33m90933fe[m fix bug deleteMe
+[33md658def[m .
+[33md99cfa8[m .
+[33ma5b1ebf[m add middleware for login and signup
+[33m8a72f9f[m add signup and login in userController and hashing password and compare it
+[33m57c0f30[m add middleware for set isdeleted.
+[33m6d54360[m fixed bug
+[33ma712c5d[m fixed bug
+[33m3804cc1[m add package
+[33m11c439c[m add user middleware
+[33m03ee5d4[m .
+[33mcbe213a[m .
+[33m96e39ed[m Add abstract schema for better shap as allSchema
+[33mf0c8b4d[m .
+[33mbdbfaa5[m .
+[33meafde5a[m add userName in user model
+[33mcbdb46b[m .
+[33m1585c5a[m .
+[33m742113e[m add main route file
+[33m57f2966[m add  package
+[33m4faa686[m add login
+[33m6cbda48[m add signup
+[33m7b9c9e0[m add create token for all function we need
+[33m3ac2eb6[m Add auth file and create token
+[33mc215c9b[m Add deleteMe
+[33mc34d37f[m handel error
+[33mbea4f57[m Add this file and handel any error.
+[33m16928d8[m add globalErrorHandler as a middleware.
+[33m37870dc[m Add updateMe for only user can be use.
+[33m8ac663a[m Add getUser info by yourself and createUser by admin or another role.
+[33me6ba674[m create function getall getone update and delete for user
+[33m25a08f4[m Add updateOne in handler factory
+[33m62448fc[m Add deleteOne in handlerFactory.
+[33mb0d0dac[m Add getOne in handler factory
+[33mf63bfd3[m Add GetAll with api features in handlerFactory
+[33m35689ed[m Create handler factory and add createOne function
+[33m1b82cdc[m add package
+[33m067e57c[m Add ApiFeatures for  filter,sort,limitField,pagination
+[33m2712a37[m Add Handel appError
+[33md65c566[m Handel async error
+[33m2020277[m Add fram response
+[33mfab84ad[m Add scalable validation service
+[33m85a7ce2[m Create user model
+[33md997362[m .
+[33m9c64be4[m test contribution
+[33ma57d5f1[m .
+[33m22b5441[m fasdfg
+[33mb01acfe[m .
+[33mfc6399c[m .
+[33m4d2c9c2[m Add server file for exclude the server instead of  mix server and app and handel error sync and async
+[33mb1b7aa3[m block Query injection ,XSS, Body Parser
+[33mccaf9df[m improve security and fram
+[33m0e912bc[m first commit
