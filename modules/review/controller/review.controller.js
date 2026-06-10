@@ -20,7 +20,7 @@ exports.create = catchAsync(async (req, res) => {
     statusCode: 201,
     success: true,
     enMessage: 'Review submit succeessfully.!',
-    data:newReview
+    data: newReview,
   });
 });
 
@@ -47,15 +47,15 @@ exports.update = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     enMessage: 'Review updated successfully.',
-    data:updateReview
+    data: updateReview,
   });
 });
 
-exports.getOne=catchAsync(async(req,res)=>{
-  const reviewId = req.params.id
-  const review = await Review.findById(reviewId)
+exports.getOne = catchAsync(async (req, res) => {
+  const reviewId = req.params.id;
+  const review = await Review.findById(reviewId);
 
-  if(!review){
+  if (!review) {
     return sendResponse({
       res,
       statusCode: 400,
@@ -69,6 +69,27 @@ exports.getOne=catchAsync(async(req,res)=>{
     statusCode: 200,
     success: true,
     enMessage: 'Review find successfully.',
-    data:review
-  }); 
-})
+    data: review,
+  });
+});
+
+exports.getAll = catchAsync(async (req, res) => {
+  const review = await Review.find();
+
+  if (!review) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      success: false,
+      enMessage: 'Review not found.!',
+    });
+  }
+
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    enMessage: 'Review find successfully.',
+    data: review,
+  });
+});
