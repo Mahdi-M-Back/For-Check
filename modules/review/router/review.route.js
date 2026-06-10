@@ -4,7 +4,9 @@ const reviewMiddleware = require("../middleware/review.middleware");
 
 const router = express.Router();
 
-router.post("/", reviewMiddleware.create, reviewController.create);
+router.route("/")
+  .post(reviewMiddleware.create, reviewController.create);
+  .get(reviewController.getAll);
 
 router.route("/:id")
   .get(reviewController.getOne)
