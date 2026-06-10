@@ -50,3 +50,25 @@ exports.update = catchAsync(async (req, res) => {
     data:updateReview
   });
 });
+
+exports.getOne=catchAsync(async(req,res)=>{
+  const reviewId = req.params.id
+  const review = await Review.findById(reviewId)
+
+  if(!review){
+    return sendResponse({
+      res,
+      statusCode: 400,
+      success: false,
+      enMessage: 'Review not found.!',
+    });
+  }
+
+  return sendResponse({
+    res,
+    statusCode: 200,
+    success: true,
+    enMessage: 'Review find successfully.',
+    data:review
+  }); 
+})
