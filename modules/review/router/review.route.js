@@ -8,3 +8,4 @@ router.post("/", reviewMiddleware.create, reviewController.create);
 
 router.route("/:id")
   .get(reviewController.getOne)
+  .delete(reviewMiddleware.delete, reviewController.delete);
