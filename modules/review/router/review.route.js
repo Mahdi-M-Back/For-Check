@@ -5,3 +5,6 @@ const reviewMiddleware = require("../middleware/review.middleware");
 const router = express.Router();
 
 router.post("/", reviewMiddleware.create, reviewController.create);
+
+router.route("/:id")
+  .get(reviewController.getOne)
