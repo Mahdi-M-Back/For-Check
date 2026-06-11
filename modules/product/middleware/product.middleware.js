@@ -90,16 +90,6 @@ exports.create = (req, res, next) => {
     });
   }
 
-  const priceEmptyCheck = Validator.isNotEmpty(price);
-  if (priceEmptyCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: priceEmptyCheck.enMessage,
-      data: 'price',
-    });
-  }
-
   const priceNumberCheck = Validator.isNumber(price);
   if (!priceNumberCheck.success) {
     return sendResponse({
@@ -117,16 +107,6 @@ exports.create = (req, res, next) => {
       res,
       statusCode: 400,
       enMessage: ratingDefinedCheck.enMessage,
-      data: 'rating',
-    });
-  }
-
-  const ratingEmptyCheck = Validator.isNotEmpty(rating);
-  if (ratingEmptyCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: ratingEmptyCheck.enMessage,
       data: 'rating',
     });
   }
