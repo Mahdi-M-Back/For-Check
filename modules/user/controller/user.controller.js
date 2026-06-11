@@ -17,7 +17,7 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getMe = catchAsync(async (req, res) => {
-  const user = User.findById(req.params.id);
+  const user = await User.findById(req.params.id);
 
   if (!user) {
     return sendResponse({
@@ -78,18 +78,13 @@ exports.signup = catchAsync(async (req, res) => {
 
   const salt = await bcrypt.genSaltSync(12);
   const hashPassword = await bcrypt.hashSync(req.body.password, salt);
-  const filteredBody = filterObj(
-    req.body,
-    'name',
-    'userName',
-    'hashPassword',
-    'email',
-  );
-  const newUser = await User.save({
+  const filteredBody = filterObj(req.body, 'name', 'userName', 'email');
+  const newUser = await User.create({
     ...filteredBody,
+    password: hashPassword,
     role: 'user',
   });
-  await new Email(newUser, url).send('welcome', 'Welcome to My Test Project..!');
+  await new Email(newUser).send('welcome', 'Welcome to My Test Project..!');
   createSendToken(newUser, 201, res);
 });
 
@@ -133,7 +128,7 @@ exports.forgotPassword = catchAsync(async (req, res) => {
     const resetURL = `${req.protocol}://${req.get(
       'host',
     )}/api/v1/users/resetPassword/${resetToken}`;
-    console.log(resetURL)
+    console.log(resetURL);
     const enMessage = `Forgot your password? Submit a PATCH request 
       with new password and passwordConfirm to:${resetURL}.
       \nIf you didn't forgot your password, please ignore this email!`;
@@ -161,7 +156,7 @@ exports.forgotPassword = catchAsync(async (req, res) => {
 });
 
 exports.resetPassword = catchAsync(async (req, res) => {
-  const {password}=req.body
+  const { password } = req.body;
   const hashedToken = crypto
     .createHash('sha256')
     .update(req.params.token)
@@ -172,8 +167,7 @@ exports.resetPassword = catchAsync(async (req, res) => {
     passwordResetExpires: { $gt: Date.now() },
   });
 
-
-  if(!user){
+  if (!user) {
     return sendResponse({
       res,
       statusCode: 404,
@@ -184,7 +178,7 @@ exports.resetPassword = catchAsync(async (req, res) => {
 
   const salt = await bcrypt.genSaltSync(12);
   const hashPassword = await bcrypt.hashSync(password, salt);
-  user.password = hashPassword
+  user.password = hashPassword;
   user.passwordChangeAt = Date.now();
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
@@ -194,16 +188,18 @@ exports.resetPassword = catchAsync(async (req, res) => {
   createSendToken(user, 200, res);
 });
 
-exports.updatePassword = catchAsync(async(req,res)=>{
-  const {password} =req.body
-  const user = await User.findById(req.user.id)
+exports.updatePassword = catchAsync(async (req, res) => {
+  const { password } = req.body;
+  const user = await User.findById(req.user.id);
   const salt = await bcrypt.genSaltSync(12);
   const hashPassword = await bcrypt.hashSync(password, salt);
-  user.password = hashPassword
+  user.password = hashPassword;
+  await user.save();
+
   return sendResponse({
     res,
-      statusCode: 404,
-      success: false,
-      enMessage: 'Password reset seccessfully.',
-  })
-})
+    statusCode: 200,
+    success: true,
+    enMessage: 'Password reset successfully.',
+  });
+});
