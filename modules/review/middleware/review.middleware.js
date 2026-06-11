@@ -102,3 +102,54 @@ exports.create = (req, res, next) => {
 
   next();
 };
+
+exports.update = (req,res,next)=>{
+  const user = req.user.id
+  const {review, product,rating} = req.body
+
+// product
+  const productIdCheck = Validator.isMongoId(product);
+  if (!productIdCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: productIdCheck.enMessage,
+      data: 'product',
+    });
+  }
+
+  // user
+  const userIdCheck = Validator.isMongoId(user);
+  if (!userIdCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: userIdCheck.enMessage,
+      data: 'user',
+    });
+  }
+
+  // review
+  const reviewStringCheck = Validator.isString(review);
+  if (!reviewStringCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: reviewStringCheck.enMessage,
+      data: 'review',
+    });
+  }
+
+  // rating
+  const ratingNumberCheck = Validator.isNumber(rating);
+  if (!ratingNumberCheck.success) {
+    return sendResponse({
+      res,
+      statusCode: 400,
+      enMessage: ratingNumberCheck.enMessage,
+      data: 'rating',
+    });
+  }
+
+  next()
+}
