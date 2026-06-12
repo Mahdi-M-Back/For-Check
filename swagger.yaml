@@ -287,3 +287,42 @@ paths:
                     type: string
                     example: "Somethings went very wrong.!"            
 
+  /api/v1/users/updatePassword:
+    patch:
+      summary: Update password
+      description: Change current user password.
+      tags:
+        - Users
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  format: password
+                  example: "NewPassword123"
+
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  en_message:
+                    type: string
+                    example: "Password reset successfully."
