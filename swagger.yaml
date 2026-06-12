@@ -414,3 +414,33 @@ paths:
 
                   data:
                     type: object          
+
+  /api/v1/users/me:
+    delete:
+      summary: Delete current user
+      description: Soft delete authenticated user.
+      tags:
+        - Users
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        '204':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  en_message:
+                    type: string
+                    example: "User deleted successfully."
+
+                  data:
+                    nullable: true
+                    example: null
