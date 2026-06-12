@@ -116,3 +116,61 @@ paths:
                   en_message:
                     type: string
                     example: 'This email used by another user.'
+
+  /api/v1/users/login:
+    post:
+      summary: Login user
+      description: Authenticate user and return JWT token.
+      tags:
+        - Users
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: 'mahdi@example.com'
+
+                password:
+                  type: string
+                  format: password
+                  example: 'Password123'
+
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  en_message:
+                    type: string
+                    example: 'Incorrect email or password'
