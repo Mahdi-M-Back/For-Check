@@ -17,7 +17,7 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getMe = catchAsync(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.user.id);
 
   if (!user) {
     return sendResponse({
