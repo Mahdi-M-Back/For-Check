@@ -226,3 +226,64 @@ paths:
                   en_message:
                     type: string
                     example: "If this email exists, a reset link was sent."
+
+  /api/v1/users/resetPassword/{token}:
+    patch:
+      summary: Reset password
+      description: Reset password using reset token.
+      tags:
+        - Users
+
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+          example: "2e1dd03fa2d4c7e50d7f46d9"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  format: password
+                  example: "NewPassword123"
+
+      responses:
+        '200':
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+
+        '404':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  en_message:
+                    type: string
+                    example: "Somethings went very wrong.!"            
+
