@@ -24,3 +24,95 @@ security:
   - bearerAuth: []
 
 paths:
+
+#User
+  /api/v1/users/signup:
+    post:
+      summary: Register new user
+      description: Create a new user account.
+      tags:
+        - Users
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - userName
+                - password
+              properties:
+                name:
+                  type: string
+                  example: 'Mahdi Moshtaghi'
+
+                email:
+                  type: string
+                  format: email
+                  example: 'mahdi@example.com'
+
+                userName:
+                  type: string
+                  example: 'mahdi123'
+
+                password:
+                  type: string
+                  format: password
+                  example: 'Password123'
+
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  token:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+
+                  data:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        example: '6878f1d94fd5c7ec58a12345'
+
+                      name:
+                        type: string
+                        example: 'Mahdi Moshtaghi'
+
+                      email:
+                        type: string
+                        example: 'mahdi@example.com'
+
+                      userName:
+                        type: string
+                        example: 'mahdi123'
+
+                      role:
+                        type: string
+                        example: 'user'
+
+        '401':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  en_message:
+                    type: string
+                    example: 'This email used by another user.'
