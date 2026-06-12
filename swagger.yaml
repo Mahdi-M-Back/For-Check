@@ -374,3 +374,43 @@ paths:
 
         '401':
           description: User not found
+
+  /api/v1/users/me:
+    patch:
+      summary: Update current user
+      description: Update authenticated user information.
+      tags:
+        - Users
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Mahdi Moshtaghi"
+
+                userName:
+                  type: string
+                  example: "mahdi_new"
+
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  data:
+                    type: object          
