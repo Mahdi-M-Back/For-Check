@@ -3,6 +3,9 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
+const swaggerJsDoc = require("swagger-jsdoc");
+const YAML = require("yamljs")
+const swaggerUi = require("swagger-ui-express");
 const globalErrorHandler = require('./utilities/errorHandler')
 require('dotenv').config();
 
@@ -30,6 +33,16 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
+
+// Swagger
+const swaggerDocument = YAML.load("./swagger.yaml");
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use((req, res, next) => {
+  const serverTime = new Date().toISOString();
+  res.setHeader('X-Server-Time', serverTime);
+  next();
+});
 
 app.use('/api/v1', require('./router'));
 
