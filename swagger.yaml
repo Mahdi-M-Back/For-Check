@@ -174,3 +174,55 @@ paths:
                   en_message:
                     type: string
                     example: 'Incorrect email or password'
+
+  /api/v1/users/forgotPassword:
+    post:
+      summary: Send password reset token
+      description: Send password reset link to user email.
+      tags:
+        - Users
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "mahdi@example.com"
+
+      responses:
+        '200':
+          description: Reset token sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  en_message:
+                    type: string
+                    example: "Token sent to email.!"
+
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+
+                  en_message:
+                    type: string
+                    example: "If this email exists, a reset link was sent."
