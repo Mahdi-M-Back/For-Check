@@ -1,0 +1,26 @@
+openapi: 3.1.0
+
+info:
+  title: Node.js REST API
+  version: 1.0.0
+  description: RESTful API documentation built with Express.js and MongoDB.
+
+servers:
+  - url: http://localhost:3000
+    description: Development Server
+
+tags:
+  - name: Users
+    description: User authentication and profile management
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
