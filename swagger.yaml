@@ -1401,3 +1401,36 @@ paths:
         '404':
           description: Book not found
 
+
+    delete:
+      summary: Soft delete a book
+      description: Mark a book as deleted. Only admin and owner can access this endpoint.
+      tags:
+        - Books
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f2b24fd5c7ec58a55555"
+
+      responses:
+        '204':
+          description: Book deleted successfully
+
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  enMessage:
+                    type: string
+                    example: "book not found."
