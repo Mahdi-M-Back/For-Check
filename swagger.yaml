@@ -1345,3 +1345,59 @@ paths:
                   enMessage:
                     type: string
                     example: "book not found."
+
+
+    patch:
+      summary: Update a book
+      description: Update a book by id. Only admin and owner can access this endpoint.
+      tags:
+        - Books
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f2b24fd5c7ec58a55555"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+
+              properties:
+
+                product:
+                  type: string
+                  example: "6878f1d94fd5c7ec58a12345"
+
+                price:
+                  type: number
+                  example: 1500
+
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "book updated successfully."
+
+        '404':
+          description: Book not found
+
