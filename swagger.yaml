@@ -824,3 +824,91 @@ paths:
                         rating:
                           type: number
                           example: 5
+
+    post:
+      summary: Create new product
+      description: Create a new product. Only admin and owner can access this endpoint.
+      tags:
+        - Products
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - price
+
+              properties:
+
+                name:
+                  type: string
+                  example: "iPhone 16"
+
+                price:
+                  type: number
+                  example: 999
+
+                description:
+                  type: string
+                  example: "Latest Apple smartphone"
+
+                photo:
+                  type: string
+                  example: "iphone16.jpg"
+
+                rating:
+                  type: number
+                  minimum: 1
+                  maximum: 5
+                  example: 5
+
+      responses:
+        '201':
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "Create product successfully"
+
+                  data:
+                    type: object
+                    properties:
+
+                      _id:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a12345"
+
+                      name:
+                        type: string
+                        example: "iPhone 16"
+
+                      price:
+                        type: number
+                        example: 999
+
+                      description:
+                        type: string
+                        example: "Latest Apple smartphone"
+
+                      photo:
+                        type: string
+                        example: "iphone16.jpg"
+
+                      rating:
+                        type: number
+                        example: 5
