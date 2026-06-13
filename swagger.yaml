@@ -442,3 +442,90 @@ paths:
                   data:
                     nullable: true
                     example: null
+
+#Admin
+  /api/v1/users:
+    get:
+      summary: Get all users
+      description: Retrieve all users with filtering, sorting, field limiting and pagination support.
+      tags:
+        - Admin
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: query
+          name: sort
+          schema:
+            type: string
+          example: "-createdAt"
+
+        - in: query
+          name: page
+          schema:
+            type: integer
+          example: 1
+
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          example: 10
+
+        - in: query
+          name: fields
+          schema:
+            type: string
+          example: "name,email,role"
+
+        - in: query
+          name: role
+          schema:
+            type: string
+            enum:
+              - user
+              - owner
+              - admin
+          example: "user"
+
+      responses:
+        '200':
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+
+                        _id:
+                          type: string
+                          example: "6878f1d94fd5c7ec58a12345"
+
+                        name:
+                          type: string
+                          example: "Mahdi Moshtaghi"
+
+                        email:
+                          type: string
+                          example: "mahdi@example.com"
+
+                        userName:
+                          type: string
+                          example: "mahdi123"
+
+                        role:
+                          type: string
+                          example: "user"
+
+                         
