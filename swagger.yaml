@@ -1080,7 +1080,6 @@ paths:
                     example: "Product not found.!"
 
 #Book
-
   /api/v1/books:
 
     post:
@@ -1255,8 +1254,6 @@ paths:
                         createdAt:
                           type: string
                           format: date-time
-
-
 
   /api/v1/books/{id}:
 
