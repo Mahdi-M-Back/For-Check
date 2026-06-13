@@ -1156,3 +1156,101 @@ paths:
                       createdAt:
                         type: string
                         format: date-time
+
+    get:
+      summary: Get all books
+      description: Retrieve all books with filtering, sorting, pagination and field limiting.
+      tags:
+        - Books
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+
+        - in: query
+          name: sort
+          schema:
+            type: string
+          example: "-createdAt"
+
+        - in: query
+          name: page
+          schema:
+            type: integer
+          example: 1
+
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          example: 10
+
+        - in: query
+          name: fields
+          schema:
+            type: string
+          example: "price,paid"
+
+      responses:
+        '200':
+          description: Books retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "All books there are, the count is : 2"
+
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+
+                        _id:
+                          type: string
+                          example: "6878f2b24fd5c7ec58a55555"
+
+                        user:
+                          type: object
+                          properties:
+
+                            _id:
+                              type: string
+                              example: "6878f1d94fd5c7ec58a88888"
+
+                            name:
+                              type: string
+                              example: "Mahdi Moshtaghi"
+
+                        product:
+                          type: object
+                          properties:
+
+                            _id:
+                              type: string
+                              example: "6878f1d94fd5c7ec58a12345"
+
+                            name:
+                              type: string
+                              example: "iPhone 16"
+
+                        price:
+                          type: number
+                          example: 1200
+
+                        paid:
+                          type: boolean
+                          example: true
+
+                        createdAt:
+                          type: string
+                          format: date-time
