@@ -582,3 +582,102 @@ paths:
                       role:
                         type: string
                         example: "user"                       
+
+    patch:
+    summary: Update user
+    description: Update user information by id.
+    tags:
+      - Admin
+
+    security:
+      - bearerAuth: []
+
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        example: "6878f1d94fd5c7ec58a12345"
+
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+
+              name:
+                type: string
+                example: "Mahdi Moshtaghi"
+
+              userName:
+                type: string
+                example: "mahdi_new"
+
+              email:
+                type: string
+                format: email
+                example: "newemail@example.com"
+
+              role:
+                type: string
+                enum:
+                  - user
+                  - owner
+                  - admin
+                example: "admin"
+
+    responses:
+      '200':
+        description: User updated successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+
+                success:
+                  type: boolean
+                  example: true
+
+                data:
+                  type: object
+                  properties:
+
+                    _id:
+                      type: string
+                      example: "6878f1d94fd5c7ec58a12345"
+
+                    name:
+                      type: string
+                      example: "Mahdi Moshtaghi"
+
+                    email:
+                      type: string
+                      example: "newemail@example.com"
+
+                    userName:
+                      type: string
+                      example: "mahdi_new"
+
+                    role:
+                      type: string
+                      example: "admin"
+
+      '401':
+        description: User not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+
+                success:
+                  type: boolean
+                  example: false
+
+                en_message:
+                  type: string
+                  example: "User not found.!"                    
