@@ -1078,3 +1078,81 @@ paths:
                   enMessage:
                     type: string
                     example: "Product not found.!"
+
+#Book
+  /api/v1/books:
+
+    post:
+      summary: Create a new book
+      description: Create a new book record for the authenticated user.
+      tags:
+        - Books
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - product
+                - price
+
+              properties:
+
+                product:
+                  type: string
+                  description: Product ID
+                  example: "6878f1d94fd5c7ec58a12345"
+
+                price:
+                  type: number
+                  example: 1200
+
+      responses:
+        '200':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "All books there are"
+
+                  data:
+                    type: object
+                    properties:
+
+                      _id:
+                        type: string
+                        example: "6878f2b24fd5c7ec58a55555"
+
+                      product:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a12345"
+
+                      user:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a88888"
+
+                      price:
+                        type: number
+                        example: 1200
+
+                      paid:
+                        type: boolean
+                        example: true
+
+                      createdAt:
+                        type: string
+                        format: date-time
