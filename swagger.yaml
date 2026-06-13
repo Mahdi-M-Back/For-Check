@@ -973,3 +973,58 @@ paths:
 
         '401':
           description: Product not found
+
+    patch:
+      summary: Update product
+      description: Update a product by id. Only admin and owner can access this endpoint.
+      tags:
+        - Products
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f1d94fd5c7ec58a12345"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+
+              properties:
+
+                name:
+                  type: string
+                  example: "Samsung S25"
+
+                price:
+                  type: number
+                  example: 1100
+
+                description:
+                  type: string
+                  example: "Updated description"
+
+                photo:
+                  type: string
+                  example: "s25.jpg"
+
+                rating:
+                  type: number
+                  minimum: 1
+                  maximum: 5
+                  example: 4
+
+      responses:
+        '201':
+          description: Product updated successfully
+
+        '401':
+          description: Product not found
