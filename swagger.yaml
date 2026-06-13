@@ -528,4 +528,57 @@ paths:
                           type: string
                           example: "user"
 
-                         
+  /api/v1/users/{id}:
+    get:
+      summary: Get single user
+      description: Retrieve a user by id.
+      tags:
+        - Admin
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f1d94fd5c7ec58a12345"
+
+      responses:
+        '200':
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  data:
+                    type: object
+                    properties:
+
+                      _id:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a12345"
+
+                      name:
+                        type: string
+                        example: "Mahdi Moshtaghi"
+
+                      email:
+                        type: string
+                        example: "mahdi@example.com"
+
+                      userName:
+                        type: string
+                        example: "mahdi123"
+
+                      role:
+                        type: string
+                        example: "user"                       
