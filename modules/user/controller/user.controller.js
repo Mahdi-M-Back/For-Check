@@ -84,7 +84,7 @@ exports.signup = catchAsync(async (req, res) => {
     password: hashPassword,
     role: 'user',
   });
-  await new Email(newUser).send('welcome', 'Welcome to My Test Project..!');
+  await new Email(newUser, "").send('welcome', 'Welcome to My Test Project..!');
   createSendToken(newUser, 201, res);
 });
 
