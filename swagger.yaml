@@ -912,3 +912,64 @@ paths:
                       rating:
                         type: number
                         example: 5
+
+
+  /api/v1/products/{id}:
+
+    get:
+      summary: Get single product
+      description: Retrieve a product by id.
+      tags:
+        - Products
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f1d94fd5c7ec58a12345"
+
+      responses:
+        '200':
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  data:
+                    type: object
+                    properties:
+
+                      _id:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a12345"
+
+                      name:
+                        type: string
+                        example: "iPhone 16"
+
+                      price:
+                        type: number
+                        example: 999
+
+                      description:
+                        type: string
+                        example: "Latest Apple smartphone"
+
+                      photo:
+                        type: string
+                        example: "iphone16.jpg"
+
+                      rating:
+                        type: number
+                        example: 5
+
+        '401':
+          description: Product not found
