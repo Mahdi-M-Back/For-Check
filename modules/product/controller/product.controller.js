@@ -72,6 +72,15 @@ exports.getAll = catchAsync(async (req, res) => {
 
   const allProd = await feature.query;
 
+  if (allProd.length === 0) {
+    return sendResponse({
+      res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'No products found.!',
+    });
+  }
+
   return sendResponse({
     res,
     statusCode: 200,

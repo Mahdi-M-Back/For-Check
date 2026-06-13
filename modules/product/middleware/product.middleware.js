@@ -192,4 +192,5 @@ exports.update = (req,res,next)=>{
       });
     }
   }
+  next();
 }

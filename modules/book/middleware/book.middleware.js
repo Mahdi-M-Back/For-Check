@@ -1,5 +1,5 @@
-const Validator = require('./../../../utilities/Validator')
-const sendResponse = require('./../../../utilities/Response')
+const Validator = require('./../../../utilities/Validator');
+const sendResponse = require('./../../../utilities/Response');
 
 exports.create = (req, res, next) => {
   const { product, price } = req.body;
@@ -59,28 +59,34 @@ exports.create = (req, res, next) => {
   next();
 };
 
-exports.update= (req,res,next)=>{
+exports.update = (req, res, next) => {
   const { product, price } = req.body;
 
-  // price 
-  if(price){
-    const priceIsNumber = Validator.isNumber(price);
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: priceNumberCheck.enMessage,
-      data: 'price',
-    });
+  // price
+  if (price) {
+    const priceNumberCheck = Validator.isNumber(price);
+    if (!priceNumberCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: priceNumberCheck.enMessage,
+        data: 'price',
+      });
+    }
   }
 
-  // product 
-  if(product){
+  // product
+  if (product) {
     const productIdCheck = Validator.isMongoId(product);
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: productIdCheck.enMessage,
-      data: 'product',
-    });
+    if (!productIdCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: productIdCheck.enMessage,
+        data: 'product',
+      });
+    }
   }
-}
+
+  next();
+};

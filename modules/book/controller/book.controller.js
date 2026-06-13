@@ -2,6 +2,7 @@ const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
 const APIFeatures = require('../../../utilities/apiFeatures');
 const bookModel = require('../model/book.model');
+const productModel = require('../../product/model/product.model');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -12,9 +13,11 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.create = catchAsync(async (req, res) => {
-  const filterField = filterObj(req.body, 'product', 'price');
+  const filterField = filterObj(req.body, 'product');
+  const findprice = await productModel.findById(filterField.product)
   const newBook = await bookModel.create({
     ...filterField,
+    price: findprice.price,
     user: req.user._id,
   });
 
