@@ -681,3 +681,53 @@ paths:
                 en_message:
                   type: string
                   example: "User not found.!"                    
+
+    delete:
+      summary: Delete user permanently
+      description: Permanently remove a user from database.
+      tags:
+        - Admin
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f1d94fd5c7ec58a12345"
+
+      responses:
+        '201':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  en_message:
+                    type: string
+                    example: "User <HARD> deleted successfuly."
+
+        '401':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: false
+
+                  en_message:
+                    type: string
+                    example: "User not found.!"              
