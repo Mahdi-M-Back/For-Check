@@ -1080,6 +1080,7 @@ paths:
                     example: "Product not found.!"
 
 #Book
+
   /api/v1/books:
 
     post:
@@ -1254,3 +1255,93 @@ paths:
                         createdAt:
                           type: string
                           format: date-time
+
+
+
+  /api/v1/books/{id}:
+
+    get:
+      summary: Get single book
+      description: Retrieve a book by its id.
+      tags:
+        - Books
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f2b24fd5c7ec58a55555"
+
+      responses:
+        '200':
+          description: Book found successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "book found."
+
+                  data:
+                    type: object
+                    properties:
+
+                      _id:
+                        type: string
+                        example: "6878f2b24fd5c7ec58a55555"
+
+                      user:
+                        type: object
+                        properties:
+
+                          name:
+                            type: string
+                            example: "Mahdi Moshtaghi"
+
+                      product:
+                        type: object
+                        properties:
+
+                          name:
+                            type: string
+                            example: "iPhone 16"
+
+                      price:
+                        type: number
+                        example: 1200
+
+                      paid:
+                        type: boolean
+                        example: true
+
+                      createdAt:
+                        type: string
+                        format: date-time
+
+        '404':
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: false
+
+                  enMessage:
+                    type: string
+                    example: "book not found."
