@@ -1028,3 +1028,53 @@ paths:
 
         '401':
           description: Product not found
+
+    delete:
+      summary: Soft delete product
+      description: Mark a product as deleted. Only admin and owner can access this endpoint.
+      tags:
+        - Products
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6878f1d94fd5c7ec58a12345"
+
+      responses:
+        '200':
+          description: Product deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "deleted succeessfully"
+
+        '401':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: false
+
+                  enMessage:
+                    type: string
+                    example: "Product not found.!"
