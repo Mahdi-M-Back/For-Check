@@ -1,7 +1,7 @@
-const catchAsync = require("../../utils/catchAsync");
+const catchAsync = require("./../../../utilities/catchAsync");
 const Review = require("../model/review.model");
-const sendResponse = require("../../../utilities/Response");
-const Validator = require("../../../utilities/Validator");
+const sendResponse = require("./../../../utilities/Response");
+const Validator = require("./../../../utilities/Validator");
 
 
 exports.create = (req, res, next) => {
