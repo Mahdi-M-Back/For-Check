@@ -1638,3 +1638,64 @@ paths:
                   enMessage:
                     type: string
                     example: "Review not found.!"
+
+
+    patch:
+      summary: Update a review
+      description: Update a review by ID. Only admin and owner can access this endpoint.
+      tags:
+        - Reviews
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6879c3e24fd5c7ec58a99999"
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+
+              properties:
+
+                review:
+                  type: string
+                  example: "Excellent product."
+
+                rating:
+                  type: number
+                  minimum: 1
+                  maximum: 5
+                  example: 4
+
+                product:
+                  type: string
+                  example: "6878f1d94fd5c7ec58a12345"
+
+      responses:
+        '200':
+          description: Review updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "Review updated successfully."
+
+        '400':
+          description: Review not found
