@@ -1562,3 +1562,79 @@ paths:
                           example: "6878f1d94fd5c7ec58a77777"
 
 
+
+  /api/v1/reviews/{id}:
+
+    get:
+      summary: Get single review
+      description: Retrieve a review by its ID.
+      tags:
+        - Reviews
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6879c3e24fd5c7ec58a99999"
+
+      responses:
+        '200':
+          description: Review retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "Review find successfully."
+
+                  data:
+                    type: object
+                    properties:
+
+                      _id:
+                        type: string
+                        example: "6879c3e24fd5c7ec58a99999"
+
+                      review:
+                        type: string
+                        example: "Very good quality product."
+
+                      rating:
+                        type: number
+                        example: 5
+
+                      product:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a12345"
+
+                      user:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a77777"
+
+        '400':
+          description: Review not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: false
+
+                  enMessage:
+                    type: string
+                    example: "Review not found.!"
