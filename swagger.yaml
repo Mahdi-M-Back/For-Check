@@ -1699,3 +1699,54 @@ paths:
 
         '400':
           description: Review not found
+
+
+    delete:
+      summary: Soft delete a review
+      description: Mark a review as deleted.
+      tags:
+        - Reviews
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "6879c3e24fd5c7ec58a99999"
+
+      responses:
+        '200':
+          description: Review deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "Review deleted successfully."
+
+        '400':
+          description: Review not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: false
+
+                  enMessage:
+                    type: string
+                    example: "Review not found.!"
