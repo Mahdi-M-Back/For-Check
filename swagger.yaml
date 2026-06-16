@@ -9,10 +9,6 @@ servers:
   - url: http://localhost:3000
     description: Development Server
 
-tags:
-  - name: Users
-    description: User authentication and profile management
-
 components:
   securitySchemes:
     bearerAuth:
@@ -1431,3 +1427,86 @@ paths:
                   enMessage:
                     type: string
                     example: "book not found."
+
+  /api/v1/reviews:
+
+    post:
+      summary: Create a new review
+      description: Submit a review for a product.
+      tags:
+        - Reviews
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - review
+                - rating
+                - product
+
+              properties:
+
+                review:
+                  type: string
+                  example: "Very good quality product."
+
+                rating:
+                  type: number
+                  minimum: 1
+                  maximum: 5
+                  example: 5
+
+                product:
+                  type: string
+                  description: Product ID
+                  example: "6878f1d94fd5c7ec58a12345"
+
+      responses:
+        '201':
+          description: Review submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+
+                  success:
+                    type: boolean
+                    example: true
+
+                  enMessage:
+                    type: string
+                    example: "Review submit succeessfully.!"
+
+                  data:
+                    type: object
+                    properties:
+
+                      _id:
+                        type: string
+                        example: "6879c3e24fd5c7ec58a99999"
+
+                      review:
+                        type: string
+                        example: "Very good quality product."
+
+                      rating:
+                        type: number
+                        example: 5
+
+                      product:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a12345"
+
+                      user:
+                        type: string
+                        example: "6878f1d94fd5c7ec58a77777"
+
+
+    
