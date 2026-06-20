@@ -13,7 +13,7 @@ router.route("/")
 
 router.route("/:id")
   .get(reviewController.getOne)
-  .delete(reviewMiddleware.delete, reviewController.delete);
+  // .delete(reviewMiddleware.delete, reviewController.delete);
 
 router.use(restrictTo('admin','owner'))
 router.patch("/:id", reviewMiddleware.update, reviewController.update);

@@ -17,7 +17,7 @@
   "scripts": {
     "jest": { "testTimeout": 30000 },
     "test": "jest",
-    "start": "nodemon server.js"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
