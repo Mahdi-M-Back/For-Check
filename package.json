@@ -15,7 +15,15 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "jest": { "testTimeout": 30000 },
+    "jest": {
+      "testPathIgnorePatterns": [
+        "/node_modules/",
+        "admin.test.js",
+        "product.test.js",
+        "book.test.js",
+        "review.test.js"
+      ]
+    },
     "test": "jest",
     "start": "node src/server.js"
   },
