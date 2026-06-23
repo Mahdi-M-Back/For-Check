@@ -3,18 +3,19 @@ const sendResponse = require('../../../utilities/Response');
 const APIFeatures = require('../../../utilities/apiFeatures');
 const bookModel = require('../model/book.model');
 const productModel = require('../../product/model/product.model');
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
+const filterObj = require('../../../utilities/filterObj');
 
 exports.create = catchAsync(async (req, res) => {
   const filterField = filterObj(req.body, 'product');
-  const findprice = await productModel.findById(filterField.product)
+  const findprice = await productModel.findById(filterField.product);
+  if (!findprice) {
+    return sendResponse({
+      res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'Product not found.',
+    });
+  }
   const newBook = await bookModel.create({
     ...filterField,
     price: findprice.price,
@@ -25,7 +26,7 @@ exports.create = catchAsync(async (req, res) => {
     res,
     statusCode: 200,
     success: true,
-    enMessage: 'All books there are',
+    enMessage: 'Book created successfully.',
     data: newBook,
   });
 });
@@ -77,10 +78,19 @@ exports.getOne = catchAsync(async (req, res) => {
 });
 
 exports.update = catchAsync(async (req, res) => {
-  const filterField = filterObj(req.body, 'product', 'price');
+  const filterField = filterObj(req.body, 'product');
+  const findprice = await productModel.findById(filterField.product);
+  if (!findprice) {
+    return sendResponse({
+      res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'Product not found.',
+    });
+  }
   const updateBook = await bookModel.findByIdAndUpdate(
     req.params.id,
-    filterField,
+    { filterField, price: findprice.price },
     { new: true },
   );
   if (!updateBook) {
@@ -113,6 +123,6 @@ exports.delete = catchAsync(async (req, res) => {
   }
   return sendResponse({
     res,
-    statusCode: 204,
+    statusCode: 200,
   });
 });
