@@ -1,11 +1,9 @@
-const catchAsync = require("./../../../utilities/catchAsync");
-const Review = require("../model/review.model");
-const sendResponse = require("./../../../utilities/Response");
-const Validator = require("./../../../utilities/Validator");
-
+const catchAsync = require('./../../../utilities/catchAsync');
+const Review = require('../model/review.model');
+const sendResponse = require('./../../../utilities/Response');
+const Validator = require('./../../../utilities/Validator');
 
 exports.create = (req, res, next) => {
-  const user = req.user.id;
   const { review, product, rating } = req.body;
 
   // product
@@ -28,26 +26,6 @@ exports.create = (req, res, next) => {
     });
   }
 
-  // user
-  const userDefinedCheck = Validator.isDefined(user);
-  if (!userDefinedCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: userDefinedCheck.enMessage,
-      data: 'user',
-    });
-  }
-  const userIdCheck = Validator.isMongoId(user);
-  if (!userIdCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: userIdCheck.enMessage,
-      data: 'user',
-    });
-  }
-
   // review
   const reviewDefinedCheck = Validator.isDefined(review);
   if (!reviewDefinedCheck.success) {
@@ -58,7 +36,6 @@ exports.create = (req, res, next) => {
       data: 'review',
     });
   }
-
   const reviewEmptyCheck = Validator.isNotEmpty(review);
   if (!reviewEmptyCheck.success) {
     return sendResponse({
@@ -68,7 +45,6 @@ exports.create = (req, res, next) => {
       data: 'review',
     });
   }
-
   const reviewStringCheck = Validator.isString(review);
   if (!reviewStringCheck.success) {
     return sendResponse({
@@ -89,7 +65,6 @@ exports.create = (req, res, next) => {
       data: 'rating',
     });
   }
-
   const ratingNumberCheck = Validator.isNumber(rating);
   if (!ratingNumberCheck.success) {
     return sendResponse({
@@ -103,53 +78,52 @@ exports.create = (req, res, next) => {
   next();
 };
 
-exports.update = (req,res,next)=>{
-  const user = req.user.id
-  const {review, product,rating} = req.body
-
-// product
-  const productIdCheck = Validator.isMongoId(product);
-  if (!productIdCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: productIdCheck.enMessage,
-      data: 'product',
-    });
+exports.update = (req, res, next) => {
+  const { review, product, rating } = req.body;
+  if (product !== undefined) {
+    const productIdCheck = Validator.isMongoId(product);
+    if (!productIdCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: productIdCheck.enMessage,
+        data: 'product',
+      });
+    }
   }
 
-  // user
-  const userIdCheck = Validator.isMongoId(user);
-  if (!userIdCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: userIdCheck.enMessage,
-      data: 'user',
-    });
+  if (review !== undefined) {
+    const reviewStringCheck = Validator.isString(review);
+    if (!reviewStringCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: reviewStringCheck.enMessage,
+        data: 'review',
+      });
+    }
+    const reviewEmptyCheck = Validator.isNotEmpty(review);
+    if (!reviewEmptyCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: reviewEmptyCheck.enMessage,
+        data: 'review',
+      });
+    }
   }
 
-  // review
-  const reviewStringCheck = Validator.isString(review);
-  if (!reviewStringCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: reviewStringCheck.enMessage,
-      data: 'review',
-    });
+  if (rating !== undefined) {
+    const ratingNumberCheck = Validator.isNumber(rating);
+    if (!ratingNumberCheck.success) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        enMessage: ratingNumberCheck.enMessage,
+        data: 'rating',
+      });
+    }
   }
 
-  // rating
-  const ratingNumberCheck = Validator.isNumber(rating);
-  if (!ratingNumberCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: ratingNumberCheck.enMessage,
-      data: 'rating',
-    });
-  }
-
-  next()
-}
+  next();
+};
