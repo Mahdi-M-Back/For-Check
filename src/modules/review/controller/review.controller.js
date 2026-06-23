@@ -1,18 +1,21 @@
 const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
 const Review = require('../model/review.model');
-
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
+const filterObj = require('../../../utilities/filterObj');
+const productModel = require('../../product/model/product.model');
 
 exports.create = catchAsync(async (req, res) => {
   const user = req.user.id;
   const limitField = filterObj(req.body, 'review', 'rating', 'product');
+  const findproduct = await productModel.findById(limitField.product)
+  if (!findproduct) {
+      return sendResponse({
+        res,
+        statusCode: 404,
+        success: false,
+        enMessage: 'Product not found.',
+      });
+    }
   const newReview = await Review.create({ ...limitField, user });
 
   return sendResponse({
@@ -74,9 +77,15 @@ exports.getOne = catchAsync(async (req, res) => {
 });
 
 exports.getAll = catchAsync(async (req, res) => {
-  const review = await Review.find();
+  const feature = await new APIFeatures(Review.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
 
-  if (!review) {
+  const reviews = await feature.query;
+
+  if (!reviews) {
     return sendResponse({
       res,
       statusCode: 400,
@@ -90,7 +99,7 @@ exports.getAll = catchAsync(async (req, res) => {
     statusCode: 200,
     success: true,
     enMessage: 'Review find successfully.',
-    data: review,
+    data: reviews,
   });
 });
 
