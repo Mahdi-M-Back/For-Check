@@ -2,63 +2,41 @@ const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
 const Product = require('../model/product.model');
 const APIFeatures = require('./../../../utilities/apiFeatures');
+const filterObj = require('../../../utilities/filterObj');
 
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
 
 exports.create = catchAsync(async (req, res) => {
-  const filter = filterObj(
-    req.body,
-    'name',
-    'price',
-    'description',
-    'photo',
-    'rating',
-  );
-
+  const filter = filterObj(req.body, 'name', 'price', 'description', 'photo', 'rating');
   const newProd = await Product.create(filter);
 
   return sendResponse({
     res,
     statusCode: 201,
     success: true,
-    enMessage: 'Create product successfully',
+    enMessage: 'Product created successfully.',
     data: newProd,
   });
 });
 
 exports.update = catchAsync(async (req, res) => {
-  const filter = filterObj(
-    req.body,
-    'name',
-    'price',
-    'description',
-    'photo',
-    'rating',
-  );
+  const filter = filterObj(req.body, 'name', 'price', 'description', 'photo', 'rating');
 
-  const updateProd = await Product.findByIdAndUpdate(req.params.id, filter, {
-    new: true,
-  });
+  const updateProd = await Product.findByIdAndUpdate(req.params.id, filter, { new: true });
 
   if (!updateProd) {
     return sendResponse({
       res,
-      statusCode: 401,
+      statusCode: 404,
       success: false,
-      enMessage: 'product not found.!',
+      enMessage: 'Product not found.',
     });
   }
+
   return sendResponse({
     res,
-    statusCode: 201,
+    statusCode: 200,
     success: true,
-    enMessage: 'Update product successfully',
+    enMessage: 'Product updated successfully.',
     data: updateProd,
   });
 });
@@ -77,7 +55,7 @@ exports.getAll = catchAsync(async (req, res) => {
       res,
       statusCode: 404,
       success: false,
-      enMessage: 'No products found.!',
+      enMessage: 'No products found.',
     });
   }
 
@@ -85,45 +63,48 @@ exports.getAll = catchAsync(async (req, res) => {
     res,
     statusCode: 200,
     success: true,
-    enMessage: `All porduct balance is : ${allProd.length} `,
+    enMessage: `${allProd.length} product(s) found.`,
     data: allProd,
   });
 });
 
 exports.getOne = catchAsync(async (req, res) => {
-  const pord = await Product.findById(req.params.id);
-  if (!pord) {
+  const prod = await Product.findById(req.params.id);
+
+  if (!prod) {
     return sendResponse({
       res,
-      statusCode: 401,
+      statusCode: 404,
       success: false,
-      enMessage: 'product not found.!',
+      enMessage: 'Product not found.',
     });
   }
+
   return sendResponse({
     res,
     statusCode: 200,
     success: true,
-    data: pord,
+    enMessage: 'Product found.',
+    data: prod,
   });
 });
 
 exports.delete = catchAsync(async (req, res) => {
-  const pord = await Product.findByIdAndUpdate(req.params.id, {
-    isDeleted: true,
-  });
-  if (!pord) {
+  const prod = await Product.findByIdAndUpdate(req.params.id, { isDeleted: true });
+
+  if (!prod) {
     return sendResponse({
       res,
-      statusCode: 401,
+      statusCode: 404,
       success: false,
-      enMessage: 'product not found.!',
+      enMessage: 'Product not found.',
     });
   }
+
   return sendResponse({
     res,
     statusCode: 200,
     success: true,
-    enMessage: 'deleted succeessfully',
+    enMessage: 'Product deleted successfully.',
   });
 });
