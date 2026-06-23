@@ -26,4 +26,7 @@ const bookSchema = new abstractSchema({
   },
 });
 
+bookSchema.index({ user: 1 });
+bookSchema.index({ product: 1 });
+
 module.exports = mongoose.model('Book', bookSchema, 'Books');
