@@ -2,30 +2,8 @@ const Validator = require('./../../../utilities/Validator');
 const sendResponse = require('./../../../utilities/Response');
 
 exports.create = (req, res, next) => {
-  const { product, price } = req.body;
+  const { product } = req.body;
 
-  // price
-  const priceDefinedCheck = Validator.isDefined(price);
-  if (!priceDefinedCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: priceDefinedCheck.enMessage,
-      data: 'price',
-    });
-  }
-
-  const priceNumberCheck = Validator.isNumber(price);
-  if (!priceNumberCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: priceNumberCheck.enMessage,
-      data: 'price',
-    });
-  }
-
-  // product
   const productDefinedCheck = Validator.isDefined(product);
   if (!productDefinedCheck.success) {
     return sendResponse({
@@ -62,8 +40,7 @@ exports.create = (req, res, next) => {
 exports.update = (req, res, next) => {
   const { product, price } = req.body;
 
-  // price
-  if (price) {
+  if (price !== undefined) {
     const priceNumberCheck = Validator.isNumber(price);
     if (!priceNumberCheck.success) {
       return sendResponse({
@@ -75,8 +52,7 @@ exports.update = (req, res, next) => {
     }
   }
 
-  // product
-  if (product) {
+  if (product !== undefined) {
     const productIdCheck = Validator.isMongoId(product);
     if (!productIdCheck.success) {
       return sendResponse({
