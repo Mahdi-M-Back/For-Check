@@ -1,9 +1,10 @@
 const abstractSchema = require('../../../schema/abstract.schema');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const productScheam = new abstractSchema({
   name: {
     type: String,
+    required: true,
   },
   photo: {
     type: String,
@@ -11,6 +12,7 @@ const productScheam = new abstractSchema({
   },
   price: {
     type: Number,
+    required: true,
   },
   description: {
     type: String,
