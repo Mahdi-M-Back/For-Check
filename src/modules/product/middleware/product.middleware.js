@@ -1,196 +1,22 @@
-const sendResponse = require('./../../../utilities/Response');
-const Validator = require('./../../../utilities/Validator');
+const {
+  validateBody,
+  required,
+  string,
+  notEmpty,
+  number,
+  optional,
+} = require('../../../utilities/validateBody');
 
-exports.create = (req, res, next) => {
-  const { name, description, price, photo, rating } = req.body;
+exports.create = validateBody({
+  name:        [required, string, notEmpty],
+  description: [required, string, notEmpty],
+  price:       [required, number],
+  photo:       optional(string, notEmpty),
+});
 
-  // description
-  const descriptionDefinedCheck = Validator.isDefined(description);
-  if (!descriptionDefinedCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: descriptionDefinedCheck.enMessage,
-      data: 'description',
-    });
-  }
-
-  const descriptionEmptyCheck = Validator.isNotEmpty(description);
-  if (!descriptionEmptyCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: descriptionEmptyCheck.enMessage,
-      data: 'description',
-    });
-  }
-
-  const descriptionStringCheck = Validator.isString(description);
-  if (!descriptionStringCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: descriptionStringCheck.enMessage,
-      data: 'description',
-    });
-  }
-
-  // name
-  const nameDefinedCheck = Validator.isDefined(name);
-  if (!nameDefinedCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: nameDefinedCheck.enMessage,
-      data: 'name',
-    });
-  }
-
-  const nameEmptyCheck = Validator.isNotEmpty(name);
-  if (!nameEmptyCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: nameEmptyCheck.enMessage,
-      data: 'name',
-    });
-  }
-
-  const nameStringCheck = Validator.isString(name);
-  if (!nameStringCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: nameStringCheck.enMessage,
-      data: 'name',
-    });
-  }
-
-  // photo
-  if (photo) {
-    const photoStringCheck = Validator.isString(photo);
-    if (!photoStringCheck.success) {
-      return sendResponse({
-        res,
-        statusCode: 400,
-        enMessage: photoStringCheck.enMessage,
-        data: 'photo',
-      });
-    }
-  }
-
-  // price
-  const priceDefinedCheck = Validator.isDefined(price);
-  if (!priceDefinedCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: priceDefinedCheck.enMessage,
-      data: 'price',
-    });
-  }
-
-  const priceNumberCheck = Validator.isNumber(price);
-  if (!priceNumberCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: priceNumberCheck.enMessage,
-      data: 'price',
-    });
-  }
-
-  // rating
-  const ratingDefinedCheck = Validator.isDefined(rating);
-  if (!ratingDefinedCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: ratingDefinedCheck.enMessage,
-      data: 'rating',
-    });
-  }
-
-  const ratingNumberCheck = Validator.isNumber(rating);
-  if (!ratingNumberCheck.success) {
-    return sendResponse({
-      res,
-      statusCode: 400,
-      enMessage: ratingNumberCheck.enMessage,
-      data: 'rating',
-    });
-  }
-
-  next();
-};
-
-exports.update = (req,res,next)=>{
-
-  const { name, description, price, photo, rating } = req.body;
-
-  // photo
-  if (photo) {
-    const photoStringCheck = Validator.isString(photo);
-    if (!photoStringCheck.success) {
-      return sendResponse({
-        res,
-        statusCode: 400,
-        enMessage: photoStringCheck.enMessage,
-        data: 'photo',
-      });
-    }
-  }
-
-  // name
-  if (name) {
-    const nameStringCheck = Validator.isString(name);
-    if (!nameStringCheck.success) {
-      return sendResponse({
-        res,
-        statusCode: 400,
-        enMessage: nameStringCheck.enMessage,
-        data: 'name',
-      });
-    }
-  }
-
-  // description
-  if (description) {
-    const descriptionStringCheck = Validator.isString(description);
-    if (!descriptionStringCheck.success) {
-      return sendResponse({
-        res,
-        statusCode: 400,
-        enMessage: descriptionStringCheck.enMessage,
-        data: 'description',
-      });
-    }
-  }
-
-  // price
-  if (price) {
-    const priceNumberCheck = Validator.isNumber(price);
-    if (!priceNumberCheck.success) {
-      return sendResponse({
-        res,
-        statusCode: 400,
-        enMessage: priceNumberCheck.enMessage,
-        data: 'price',
-      });
-    }
-  }
-
-  // rating
-  if (rating) {
-    const ratingNumberCheck = Validator.isNumber(rating);
-    if (!ratingNumberCheck.success) {
-      return sendResponse({
-        res,
-        statusCode: 400,
-        enMessage: ratingNumberCheck.enMessage,
-        data: 'rating',
-      });
-    }
-  }
-  next();
-}
+exports.update = validateBody({
+  name:        optional(string, notEmpty),
+  description: optional(string, notEmpty),
+  price:       optional(number),
+  photo:       optional(string, notEmpty),
+});
