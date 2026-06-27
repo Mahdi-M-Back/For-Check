@@ -72,7 +72,6 @@ exports.protect = catchAsync(async (req, res, next) => {
       });
     }
 
-    // Serialize to a plain object (includes the `id` virtual via virtuals:true)
     currentUser = freshUser.toObject({ virtuals: true });
 
     try {
@@ -82,8 +81,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
   }
 
-  // 4) Password-change invalidation
-  // passwordChangeAt is not select:false, so it serializes into the cache.
+
   if (currentUser.passwordChangeAt) {
     const changedTimestamp = parseInt(
       new Date(currentUser.passwordChangeAt).getTime() / 1000,
@@ -105,6 +103,8 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 
 exports.restrictTo = (...roles) => (req, res, next) => {
+  console.log(req.originalUrl);
+  console.log(req.params);
   if (!roles.includes(req.user.role)) {
     return sendResponse({
       res,
