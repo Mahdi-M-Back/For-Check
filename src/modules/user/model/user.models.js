@@ -4,26 +4,31 @@ const abstractSchema = require('./../../../schema/abstract.schema');
 const userSchema = new abstractSchema({
   name: {
     type: String,
+    required: true,
   },
   email: {
     type: String,
     unique: true,
     lowercase: true,
+    required: true,
   },
   userName: {
     type: String,
     unique: true,
     lowercase: true,
+    required: true,
   },
   role: {
     type: String,
     enum: ['user', 'owner', 'admin'],
     default: 'user',
+    required: true,
   },
   password: {
     type: String,
     minlength: 6,
     select: false,
+    required: true,
   },
   passwordChangeAt: Date,
   passwordResetToken: String,
