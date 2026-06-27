@@ -3,5 +3,5 @@ const filterObj = (obj, ...allowedFields) =>
     if (allowedFields.includes(key)) acc[key] = obj[key];
     return acc;
   }, {});
-
+ 
 module.exports = filterObj;
