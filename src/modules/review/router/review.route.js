@@ -5,14 +5,16 @@ const { protect ,restrictTo } = require('./../../user/middleware/user.middleware
 
 const router = express.Router();
 
+router.get('/', reviewController.getAll);
+router.get('/:id', reviewController.getOne);
+
 router.use(protect)
 
 router.route("/")
   .post(reviewMiddleware.create, reviewController.create)
-  .get(reviewController.getAll);
+
 
 router.route("/:id")
-  .get(reviewController.getOne)
   // .delete(reviewMiddleware.delete, reviewController.delete);
 
 router.use(restrictTo('admin','owner'))
