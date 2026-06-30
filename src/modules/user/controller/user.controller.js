@@ -1,4 +1,4 @@
-const User = require('./../model/user.models');
+const userRepo = require('./../repository/user.repository');
 const AppError = require('../../../utilities/appError');
 const sendResponse = require('./../../../utilities/Response');
 const Email = require('./../../../utilities/email');
@@ -20,10 +20,7 @@ exports.getMe = catchAsync(async (req, res) => {
 exports.updateMe = catchAsync(async (req, res) => {
   const filteredBody = filterObj(req.body, 'name', 'userName');
 
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
+  const updatedUser = await userRepo.update(req.user.id, filteredBody);
 
   return sendResponse({
     res,
@@ -34,7 +31,7 @@ exports.updateMe = catchAsync(async (req, res) => {
 });
 
 exports.deleteMe = catchAsync(async (req, res) => {
-  await User.findByIdAndUpdate(req.user.id, { isDeleted: true });
+  await userRepo.softDelete(req.user.id);
 
   return sendResponse({
     res,
@@ -46,7 +43,7 @@ exports.deleteMe = catchAsync(async (req, res) => {
 });
 
 exports.signup = catchAsync(async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
+  const user = await userRepo.findOne({ email: req.body.email });
   if (user) {
     return sendResponse({
       res,
@@ -60,7 +57,7 @@ exports.signup = catchAsync(async (req, res) => {
   const hashPassword = await bcrypt.hash(req.body.password, salt);
   const filteredBody = filterObj(req.body, 'name', 'userName', 'email');
 
-  const newUser = await User.create({
+  const newUser = await userRepo.create({
     ...filteredBody,
     password: hashPassword,
     role: 'user',
@@ -73,7 +70,7 @@ exports.signup = catchAsync(async (req, res) => {
 exports.login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await userRepo.findOne({ email }).select('+password');
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return sendResponse({
       res,
@@ -88,7 +85,7 @@ exports.login = catchAsync(async (req, res) => {
 
 exports.forgotPassword = catchAsync(async (req, res) => {
   const { email } = req.body;
-  const user = await User.findOne({ email });
+  const user = await userRepo.findByEmail(req.body.email);;
 
   if (!user) {
     return sendResponse({
@@ -166,7 +163,7 @@ exports.resetPassword = catchAsync(async (req, res) => {
 
 exports.updatePassword = catchAsync(async (req, res) => {
   const { currentPassword, newPassword } = req.body;
-  const user = await User.findById(req.user.id).select('+password');
+  const user = await userRepo.findByIdWithPassword(req.user._id);
 
   if (!user || !(await bcrypt.compare(currentPassword, user.password))) {
     return sendResponse({
