@@ -1,22 +1,23 @@
 const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
-const Review = require('../model/review.model');
+const reviewRepo = require('./../repository/review.repository');
 const filterObj = require('../../../utilities/filterObj');
+const APIFeatures = require('../../../utilities/apiFeatures');
 const productModel = require('../../product/model/product.model');
 
 exports.create = catchAsync(async (req, res) => {
   const user = req.user.id;
   const limitField = filterObj(req.body, 'review', 'rating', 'product');
-  const findproduct = await productModel.findById(limitField.product)
+  const findproduct = await productModel.findById(limitField.product);
   if (!findproduct) {
-      return sendResponse({
-        res,
-        statusCode: 404,
-        success: false,
-        enMessage: 'Product not found.',
-      });
-    }
-  const newReview = await Review.create({ ...limitField, user });
+    return sendResponse({
+      res,
+      statusCode: 404,
+      success: false,
+      enMessage: 'Product not found.',
+    });
+  }
+  const newReview = await reviewRepo.create({ ...limitField, user });
 
   return sendResponse({
     res,
@@ -29,7 +30,7 @@ exports.create = catchAsync(async (req, res) => {
 
 exports.update = catchAsync(async (req, res) => {
   const productId = req.params.id;
-  const findReview = await Review.findById(productId);
+  const findReview = await reviewRepo.findById(productId);
 
   if (!findReview) {
     return sendResponse({
@@ -40,23 +41,22 @@ exports.update = catchAsync(async (req, res) => {
     });
   }
 
-  const limitField = filterObj(req.body, 'review', 'rating', 'product');
-  const updateReview = await Review.findByIdAndUpdate(productId, limitField, {
-    new: true,
-  });
+  const filteredBody = filterObj(req.body, 'review', 'rating');
+  const updated = await reviewRepo.update(req.params.id, filteredBody);
+  if (updated) await reviewRepo.calcAndSyncRating(updated.product);
 
   return sendResponse({
     res,
     statusCode: 200,
     success: true,
     enMessage: 'Review updated successfully.',
-    data: updateReview,
+    data: updated,
   });
 });
 
 exports.getOne = catchAsync(async (req, res) => {
   const reviewId = req.params.id;
-  const review = await Review.findById(reviewId);
+  const review = await reviewRepo.findById(reviewId);
 
   if (!review) {
     return sendResponse({
@@ -77,7 +77,7 @@ exports.getOne = catchAsync(async (req, res) => {
 });
 
 exports.getAll = catchAsync(async (req, res) => {
-  const feature = await new APIFeatures(Review.find(), req.query)
+  const feature = new APIFeatures(reviewRepo.query(), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -104,22 +104,20 @@ exports.getAll = catchAsync(async (req, res) => {
 });
 
 exports.delete = catchAsync(async (req, res) => {
-  const reviewId = req.params.id;
-  const review = await Review.findByIdAndUpdate(reviewId, { isDeleted: true });
-
-  if (!review) {
+  const deleted = await reviewRepo.softDelete(req.params.id);
+  if (!deleted) {
     return sendResponse({
       res,
-      statusCode: 400,
+      statusCode: 404,
       success: false,
-      enMessage: 'Review not found.!',
+      enMessage: 'Review not found.',
     });
   }
-
+  await reviewRepo.calcAndSyncRating(deleted.product);
   return sendResponse({
     res,
     statusCode: 200,
     success: true,
-    enMessage: 'Review deleted successfully.',
+    data: deleted,
   });
 });
