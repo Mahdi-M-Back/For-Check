@@ -1,9 +1,9 @@
-const jwt          = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const User         = require('../model/user.models');
 const sendResponse = require('../../../utilities/Response');
-const catchAsync   = require('../../../utilities/catchAsync');
-const cache        = require('../../../utilities/cache');
+const catchAsync = require('../../../utilities/catchAsync');
+const cache = require('../../../utilities/cache');
+const userRepo = require('../repository/user.repository');
 
 const {
   validateBody,
@@ -17,13 +17,11 @@ const {
   inEnum,
 } = require('../../../utilities/validateBody');
 
-
 const ROLES = Object.freeze({
-  USER:  'user',
+  USER: 'user',
   ADMIN: 'admin',
   OWNER: 'owner',
 });
-
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Extract token
@@ -35,8 +33,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     return sendResponse({
       res,
       statusCode: 401,
-      success:    false,
-      enMessage:  'You are not logged in. Please log in to access.',
+      success: false,
+      enMessage: 'You are not logged in. Please log in to access.',
     });
   }
 
@@ -48,8 +46,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     return sendResponse({
       res,
       statusCode: 401,
-      success:    false,
-      enMessage:  'Invalid or expired token. Please log in again.',
+      success: false,
+      enMessage: 'Invalid or expired token. Please log in again.',
     });
   }
 
@@ -62,13 +60,13 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   if (!currentUser) {
-    const freshUser = await User.findById(decoded.id);
+    const freshUser = await userRepo.findById(decoded.id);
     if (!freshUser) {
       return sendResponse({
         res,
         statusCode: 401,
-        success:    false,
-        enMessage:  'The user belonging to this token no longer exists.',
+        success: false,
+        enMessage: 'The user belonging to this token no longer exists.',
       });
     }
 
@@ -81,7 +79,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
   }
 
-
   if (currentUser.passwordChangeAt) {
     const changedTimestamp = parseInt(
       new Date(currentUser.passwordChangeAt).getTime() / 1000,
@@ -91,8 +88,8 @@ exports.protect = catchAsync(async (req, res, next) => {
       return sendResponse({
         res,
         statusCode: 401,
-        success:    false,
-        enMessage:  'Password was recently changed. Please log in again.',
+        success: false,
+        enMessage: 'Password was recently changed. Please log in again.',
       });
     }
   }
@@ -101,43 +98,42 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-
-exports.restrictTo = (...roles) => (req, res, next) => {
-  console.log(req.originalUrl);
-  console.log(req.params);
-  if (!roles.includes(req.user.role)) {
-    return sendResponse({
-      res,
-      statusCode: 403,
-      success:    false,
-      enMessage:  'You do not have permission to perform this action.',
-    });
-  }
-  next();
-};
-
+exports.restrictTo =
+  (...roles) =>
+  (req, res, next) => {
+    console.log(req.originalUrl);
+    console.log(req.params);
+    if (!roles.includes(req.user.role)) {
+      return sendResponse({
+        res,
+        statusCode: 403,
+        success: false,
+        enMessage: 'You do not have permission to perform this action.',
+      });
+    }
+    next();
+  };
 
 exports.signup = validateBody({
-  name:     [required, string, notEmpty],
-  email:    [required, email],
+  name: [required, string, notEmpty],
+  email: [required, email],
   userName: [required, username],
   password: [required, password],
 });
 
-
 exports.login = validateBody({
-  email:    [required, email],
+  email: [required, email],
   password: [required, notEmpty],
 });
 
 exports.updateMe = validateBody({
-  name:     optional(string, notEmpty),
+  name: optional(string, notEmpty),
   userName: optional(username),
 });
 
 exports.updatePassword = validateBody({
   currentPassword: [required, notEmpty],
-  newPassword:     [required, password],
+  newPassword: [required, password],
 });
 
 exports.forgotPassword = validateBody({
@@ -150,5 +146,5 @@ exports.resetPassword = validateBody({
 
 exports.updateRoleAndEmail = validateBody({
   email: optional(email),
-  role:  optional(inEnum(ROLES)),
+  role: optional(inEnum(ROLES)),
 });
