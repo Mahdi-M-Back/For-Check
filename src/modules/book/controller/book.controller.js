@@ -2,6 +2,7 @@ const catchAsync = require('../../../utilities/catchAsync');
 const sendResponse = require('../../../utilities/Response');
 const APIFeatures = require('../../../utilities/apiFeatures');
 const bookModel = require('../model/book.model');
+const bookRepo = require('./../repository/book.repository');
 const productModel = require('../../product/model/product.model');
 const filterObj = require('../../../utilities/filterObj');
 
@@ -33,10 +34,7 @@ exports.create = catchAsync(async (req, res) => {
 
 exports.getAll = catchAsync(async (req, res) => {
   const feature = new APIFeatures(
-    bookModel.find().populate([
-      { path: 'user', select: 'name' },
-      { path: 'product', select: 'name' },
-    ]),
+    bookRepo.query(),
     req.query,
   )
     .filter()
@@ -56,10 +54,7 @@ exports.getAll = catchAsync(async (req, res) => {
 });
 
 exports.getOne = catchAsync(async (req, res) => {
-  const book = await bookModel.findById(req.params.id).populate([
-    { path: 'user', select: 'name' },
-    { path: 'product', select: 'name' },
-  ]);
+  const book = await bookRepo.findByIdWithDetails(req.params.id);
   if (!book) {
     return sendResponse({
       res,
